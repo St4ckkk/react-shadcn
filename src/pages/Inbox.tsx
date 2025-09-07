@@ -142,22 +142,141 @@ const mockChats: Chat[] = [
 const mockMessages: Message[] = [
   {
     id: "1",
-    content: "I know how important this file is to you. You can trust me ;)",
-    timestamp: "05:23 PM",
-    isOwn: true,
+    content: "Hey! How are you doing today?",
+    timestamp: "10:30 AM",
+    isOwn: false,
     type: "text"
   },
   {
     id: "2",
-    content: "I know how important this file is to you. You can trust me ;)",
-    timestamp: "05:23 PM",
+    content: "I'm doing great! Just working on some projects. How about you?",
+    timestamp: "10:32 AM",
     isOwn: true,
     type: "text"
   },
   {
     id: "3",
+    content: "Same here! I've been really busy with the new design system. It's taking longer than expected.",
+    timestamp: "10:35 AM",
+    isOwn: false,
+    type: "text"
+  },
+  {
+    id: "4",
     content: "I know how important this file is to you. You can trust me ;)",
-    timestamp: "05:23 PM",
+    timestamp: "10:37 AM",
+    isOwn: true,
+    type: "text"
+  },
+  {
+    id: "5",
+    content: "Thanks! That means a lot. I've been working on it for weeks now.",
+    timestamp: "10:40 AM",
+    isOwn: false,
+    type: "text"
+  },
+  {
+    id: "6",
+    content: "No problem at all! I'm here to help whenever you need it.",
+    timestamp: "10:42 AM",
+    isOwn: true,
+    type: "text"
+  },
+  {
+    id: "7",
+    content: "Actually, could you take a look at the color scheme? I'm not sure if it's working well.",
+    timestamp: "10:45 AM",
+    isOwn: false,
+    type: "text"
+  },
+  {
+    id: "8",
+    content: "Of course! Send me the files and I'll review them right away.",
+    timestamp: "10:47 AM",
+    isOwn: true,
+    type: "text"
+  },
+  {
+    id: "9",
+    content: "Perfect! I'll send them over in a few minutes. Thanks again!",
+    timestamp: "10:50 AM",
+    isOwn: false,
+    type: "text"
+  },
+  {
+    id: "10",
+    content: "No worries! Take your time. I'll be here when you're ready.",
+    timestamp: "10:52 AM",
+    isOwn: true,
+    type: "text"
+  },
+  {
+    id: "11",
+    content: "By the way, did you see the new updates to the framework? They added some really cool features.",
+    timestamp: "11:00 AM",
+    isOwn: false,
+    type: "text"
+  },
+  {
+    id: "12",
+    content: "Yes! I've been experimenting with them. The new animation system is amazing!",
+    timestamp: "11:05 AM",
+    isOwn: true,
+    type: "text"
+  },
+  {
+    id: "13",
+    content: "I know right? I can't wait to implement it in our project. It's going to look so smooth.",
+    timestamp: "11:08 AM",
+    isOwn: false,
+    type: "text"
+  },
+  {
+    id: "14",
+    content: "Absolutely! We should schedule a meeting to discuss how to integrate it properly.",
+    timestamp: "11:10 AM",
+    isOwn: true,
+    type: "text"
+  },
+  {
+    id: "15",
+    content: "Great idea! How about tomorrow at 2 PM? I'll send you a calendar invite.",
+    timestamp: "11:12 AM",
+    isOwn: false,
+    type: "text"
+  },
+  {
+    id: "16",
+    content: "Perfect! I'll be there. Looking forward to it!",
+    timestamp: "11:15 AM",
+    isOwn: true,
+    type: "text"
+  },
+  {
+    id: "17",
+    content: "Me too! This is going to be a game changer for our user experience.",
+    timestamp: "11:18 AM",
+    isOwn: false,
+    type: "text"
+  },
+  {
+    id: "18",
+    content: "Definitely! I'll prepare some mockups to show you during the meeting.",
+    timestamp: "11:20 AM",
+    isOwn: true,
+    type: "text"
+  },
+  {
+    id: "19",
+    content: "That would be fantastic! I love seeing your design process.",
+    timestamp: "11:25 AM",
+    isOwn: false,
+    type: "text"
+  },
+  {
+    id: "20",
+    content: "Thanks! I'll make sure to include all the different states and interactions.",
+    timestamp: "11:28 AM",
     isOwn: true,
     type: "text"
   }

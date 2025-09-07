@@ -68,7 +68,7 @@ export function ChatPanel({
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-white">
+    <div className="flex-1 flex flex-col bg-white h-[650px]">
       <div className="ml-2 mr-2 mb-2 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="relative">
@@ -119,8 +119,8 @@ export function ChatPanel({
         </div>
       </div>
 
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-4">
+      <ScrollArea className="flex-1 h-0">
+        <div className="p-4 space-y-4">
           {messages.map((message) => (
             <div key={message.id} className={`flex items-start gap-2 ${message.isOwn ? 'justify-end' : 'justify-start'}`}>
               {message.type === 'text' && (
@@ -133,7 +133,6 @@ export function ChatPanel({
                     <p className="text-sm">{message.content}</p>
                   </div>
                   
-                 
                   <div className={`flex items-center gap-1 mt-1 ${message.isOwn ? 'justify-end' : 'justify-start'}`}>
                     <span className="text-xs text-gray-500">{message.timestamp}</span>
                     {message.isOwn && (
@@ -141,7 +140,6 @@ export function ChatPanel({
                     )}
                   </div>
                   
-               
                   <div className={`absolute top-6 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity ${
                     message.isOwn ? '-left-8' : '-right-8'
                   }`}>

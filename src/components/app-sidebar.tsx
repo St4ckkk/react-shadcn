@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/sidebar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Badge as UIBadge } from "@/components/ui/badge"
 
 const mainItems = [
   {
@@ -55,6 +56,7 @@ const mainItems = [
     title: "Inbox",
     url: "/inbox",
     icon: Inbox,
+    badge: 19,
   },
   {
     title: "Calendar",
@@ -432,6 +434,11 @@ export function AppSidebar() {
                       <Link to={item.url}>
                         <item.icon />
                         <span>{item.title}</span>
+                        {item.badge && item.badge > 0 && (
+                          <UIBadge className="ml-auto bg-red-500 text-white text-xs h-5 w-5 rounded-full flex items-center justify-center p-0">
+                            {item.badge}
+                          </UIBadge>
+                        )}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
