@@ -26,7 +26,7 @@ import {
   ChartBarBig,
   ChartPie,
 } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import {
   Sidebar,
@@ -43,6 +43,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const mainItems = [
   {
@@ -299,10 +300,16 @@ function CollapsibleSection({
 
 export function AppSidebar() {
   const location = useLocation()
+  const [isLoading, setIsLoading] = useState(true)
   const [isComponentsOpen, setIsComponentsOpen] = useState(false)
   const [isTablesOpen, setIsTablesOpen] = useState(false)
   const [isChartsOpen, setIsChartsOpen] = useState(false)
   const [isIconsOpen, setIsIconsOpen] = useState(false)
+  
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 600)
+    return () => clearTimeout(timer)
+  }, [])
   
   const collapsibleSections = [
     {
@@ -326,6 +333,73 @@ export function AppSidebar() {
       items: iconComponents,
     }
   ]
+
+  if (isLoading) {
+    return (
+      <Sidebar>
+        <SidebarHeader>
+          <div className="flex items-center gap-2 px-2 py-2">
+            <Skeleton className="h-8 w-8 rounded-lg" />
+            <div className="flex flex-col gap-1">
+              <Skeleton className="h-4 w-12" />
+              <Skeleton className="h-3 w-16" />
+            </div>
+          </div>
+        </SidebarHeader>
+        
+        <ScrollArea className="h-[calc(100vh-4rem)] smooth-scrollbar">
+          <SidebarContent className="gap-1">
+            <SidebarGroup className="py-1">
+              <SidebarGroupLabel className="px-2 py-1">Main Navigation</SidebarGroupLabel>
+              <SidebarGroupContent className="px-1">
+                <SidebarMenu>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <SidebarMenuItem key={i}>
+                      <SidebarMenuButton>
+                        <Skeleton className="h-4 w-4 rounded" />
+                        <Skeleton className="h-4 w-20" />
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+
+            {Array.from({ length: 4 }).map((_, i) => (
+              <SidebarGroup key={i} className="-my-2">
+                <SidebarGroupContent className="px-1">
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>
+                        <Skeleton className="h-4 w-4 rounded" />
+                        <Skeleton className="h-4 w-24" />
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            ))}
+
+            <SidebarGroup className="py-1">
+              <SidebarGroupLabel className="px-2 py-1">Pages</SidebarGroupLabel>
+              <SidebarGroupContent className="px-1">
+                <SidebarMenu>
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <SidebarMenuItem key={i}>
+                      <SidebarMenuButton>
+                        <Skeleton className="h-4 w-4 rounded" />
+                        <Skeleton className="h-4 w-16" />
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+        </ScrollArea>
+      </Sidebar>
+    )
+  }
     
   return (
     <Sidebar>
