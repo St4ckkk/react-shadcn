@@ -1,4 +1,4 @@
-import { Search, Plus, Check } from "lucide-react"
+import { Search, Plus, Check, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -9,6 +9,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 
 interface Chat {
@@ -77,12 +78,12 @@ export function ChatSidebar({
       </div>
 
       <ScrollArea className="flex-1 h-0">
-        <div className="p-1">
+        <div className="">
           {filteredChats.map((chat) => (
             <div
               key={chat.id}
               onClick={() => onChatSelect(chat)}
-              className={`p-3 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0 ${
+              className={`group p-3 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0 relative ${
                 selectedChat?.id === chat.id 
                   ? "bg-gray-100" 
                   : "hover:bg-gray-50"
@@ -119,6 +120,37 @@ export function ChatSidebar({
                     )}
                   </div>
                 </div>
+              </div>
+              
+     
+              <div className="absolute top-1/2 right-7 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      className="h-8 w-8 p-0 rounded-full bg-white border border-gray-200 hover:bg-gray-50 shadow-sm"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <MoreHorizontal className="h-4 w-4 text-gray-600" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-40">
+                    <DropdownMenuItem>
+                      View profile
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      Add to archive
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      Block
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           ))}
