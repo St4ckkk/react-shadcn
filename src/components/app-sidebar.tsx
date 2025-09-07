@@ -307,7 +307,7 @@ export function AppSidebar() {
   const [isIconsOpen, setIsIconsOpen] = useState(false)
   
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 600)
+    const timer = setTimeout(() => setIsLoading(false), 200)
     return () => clearTimeout(timer)
   }, [])
   
