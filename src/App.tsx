@@ -1,19 +1,14 @@
-import { SidebarProvider } from "./components/ui/sidebar"
-import Layout  from "./components/custom/layout"
-import { AppSidebar } from "./components/app-sidebar"
+import { Routes, Route } from 'react-router-dom'
+import Layout from "@/components/layout/layout"
+import Home from "@/pages/Home"
 
 const App = () => {
   return (
-    <>
-      <Layout>
-          <AppSidebar />
-        <div className="min-h-screen bg-background flex">
-          <main className="flex-1 p-6">
-            <h1 className="text-3xl font-bold underline">Hello, world!</h1>
-          </main>
-        </div>
-      </Layout>
-    </>
+    <Layout>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </Layout>
   )
 }
 

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 @import 'tailwindcss';
 @import "tw-animate-css";
 
@@ -39,6 +40,9 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+
+  --font-press-start: 'Press Start 2P', sans-serif;
 }
 
 :root {
@@ -117,5 +121,33 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.smooth-scrollbar {
+  --scrollbar-width: 8px;
+}
+
+.smooth-scrollbar [data-radix-scroll-area-scrollbar] {
+  opacity: 0;
+  transform: translateX(4px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.smooth-scrollbar:hover [data-radix-scroll-area-scrollbar] {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.smooth-scrollbar [data-radix-scroll-area-scrollbar] [data-radix-scroll-area-thumb] {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: hsl(var(--border));
+}
+
+.smooth-scrollbar:hover [data-radix-scroll-area-scrollbar] [data-radix-scroll-area-thumb] {
+  background-color: hsl(var(--border) / 0.8);
+}
+
+.smooth-scrollbar [data-radix-scroll-area-scrollbar] [data-radix-scroll-area-thumb]:hover {
+  background-color: hsl(var(--border) / 0.6);
 }
   
