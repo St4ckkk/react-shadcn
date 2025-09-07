@@ -4,6 +4,12 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface Chat {
   id: string
@@ -36,15 +42,30 @@ export function ChatSidebar({
   )
 
   return (
-    <div className="w-80 border border-gray-200 rounded-lg flex flex-col bg-white">
-      <div className="p-3 border-b border-gray-200">
+    <div className="w-85 border border-gray-200 rounded-lg flex flex-col bg-white h-[650px]">
+      <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-xl font-bold text-gray-900">Chats</h1>
-          <Button size="sm" variant="outline" className="h-8 w-8 p-0 rounded-full">
-            <Plus className="h-4 w-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="outline" className="h-8 w-8 p-0 rounded-full">
+                <Plus className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-30">
+              <DropdownMenuItem>
+                New chat
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                Create group
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                Add contact
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-        <div className="relative">
+        <div className="relative mt-3">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
             placeholder="Chats search..."
@@ -55,44 +76,44 @@ export function ChatSidebar({
         </div>
       </div>
 
-      <ScrollArea className="flex-1">
-        <div className="">
+      <ScrollArea className="flex-1 h-0">
+        <div className="p-1">
           {filteredChats.map((chat) => (
             <div
               key={chat.id}
               onClick={() => onChatSelect(chat)}
-              className={`p-3 cursor-pointer transition-colors ${
+              className={`p-3 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0 ${
                 selectedChat?.id === chat.id 
                   ? "bg-gray-100" 
                   : "hover:bg-gray-50"
               }`}
             >
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <Avatar className="h-12 w-12">
+              <div className="flex items-center gap-3 relative">
+                <div className="relative overflow-visible">
+                  <Avatar className="h-10 w-10">
                     <AvatarImage src={chat.avatar} />
                     <AvatarFallback className="bg-gray-200 text-gray-700 text-sm font-medium">
                       {chat.initials}
                     </AvatarFallback>
                   </Avatar>
                   {chat.isOnline && (
-                    <div className="absolute -bottom-1 -right-0 h-4 w-4 bg-green-500 border-2 border-white rounded-full" />
+                    <div className="absolute -bottom-1 -right-0 h-3 w-3 bg-green-500 border-2 border-white rounded-full" />
                   )}
                 </div>
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 pr-20">
                   <div className="flex items-center justify-between">
                     <h3 className="font-medium text-gray-900 truncate">{chat.name}</h3>
-                    <span className="text-xs text-gray-500">{chat.timestamp}</span>
+                    <span className="absolute top-1 right-7 text-xs text-gray-500">{chat.timestamp}</span>
                   </div>
                   <div className="flex items-center justify-between mt-1">
                     <div className="flex items-center gap-1 flex-1 min-w-0">
                       <Check className="h-3 w-3 text-gray-400 flex-shrink-0" />
-                      <p className="text-sm text-gray-600 truncate">
+                      <p className="text-sm text-gray-600 truncate max-w-[180px]">
                         {chat.lastMessage}
                       </p>
                     </div>
                     {chat.unreadCount && (
-                      <Badge className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-green-500 text-white">
+                      <Badge className="absolute bottom-0 right-6 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs bg-green-500 text-white">
                         {chat.unreadCount}
                       </Badge>
                     )}

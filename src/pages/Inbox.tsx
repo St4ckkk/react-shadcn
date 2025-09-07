@@ -75,6 +75,67 @@ const mockChats: Chat[] = [
     initials: "GW",
     lastMessage: "See you in 5 minutes!",
     timestamp: "1 day"
+  },
+  {
+    id: "8",
+    name: "Alice Johnson",
+    initials: "AJ",
+    lastMessage: "Thanks for the help with the project!",
+    timestamp: "2 hours",
+    unreadCount: 3,
+    isOnline: true
+  },
+  {
+    id: "9",
+    name: "Bob Smith",
+    initials: "BS",
+    lastMessage: "Can we reschedule our meeting?",
+    timestamp: "5 hours"
+  },
+  {
+    id: "10",
+    name: "Carol Davis",
+    initials: "CD",
+    lastMessage: "The presentation went great!",
+    timestamp: "1 day",
+    unreadCount: 1
+  },
+  {
+    id: "11",
+    name: "David Wilson",
+    initials: "DW",
+    lastMessage: "I'll send you the files tomorrow.",
+    timestamp: "2 days"
+  },
+  {
+    id: "12",
+    name: "Emma Brown",
+    initials: "EB",
+    lastMessage: "Happy birthday! ",
+    timestamp: "3 days",
+    isOnline: true
+  },
+  {
+    id: "13",
+    name: "Frank Miller",
+    initials: "FM",
+    lastMessage: "Let's catch up soon!",
+    timestamp: "1 week"
+  },
+  {
+    id: "14",
+    name: "Grace Taylor",
+    initials: "GT",
+    lastMessage: "The new design looks amazing!",
+    timestamp: "1 week",
+    unreadCount: 5
+  },
+  {
+    id: "15",
+    name: "Henry Anderson",
+    initials: "HA",
+    lastMessage: "Thanks for the feedback!",
+    timestamp: "2 weeks"
   }
 ]
 
