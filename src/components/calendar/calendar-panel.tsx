@@ -12,6 +12,8 @@ interface CalendarPanelProps {
   isAddEventOpen: boolean
   onCloseAddEvent: () => void
   onSaveEvent: (eventData: any) => void
+  editingEvent: Event | null
+  onOpenAddEvent: () => void
 }
 
 const CalendarPanel = ({ 
@@ -20,7 +22,9 @@ const CalendarPanel = ({
   events,
   isAddEventOpen,
   onCloseAddEvent,
-  onSaveEvent
+  onSaveEvent,
+  editingEvent,
+  onOpenAddEvent
 }: CalendarPanelProps) => {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [viewMode, setViewMode] = useState<'month' | 'week' | 'day'>('month')
@@ -38,8 +42,13 @@ const CalendarPanel = ({
 
   const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
+  const handleDateClick = (day: Date) => {
+    onDateSelect(day)
+    onOpenAddEvent()
+  }
+
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col bg-white">
       <div className="px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-0">
@@ -95,7 +104,7 @@ const CalendarPanel = ({
 
       <div className="flex-1">
         <div className="pl-4">
-          <div className="grid grid-cols-7 h-[580px] border border-gray-200">
+          <div className="grid grid-cols-7 h-[600px] border border-gray-200">
             {weekDays.map((day) => (
               <div key={day} className="text-center text-md font-bold text-gray-700 mt-1 max-h-[30px] border-b border-r border-gray-200">
                 {day}
@@ -117,7 +126,7 @@ const CalendarPanel = ({
                     ${isToday ? 'bg-blue-50' : ''}
                     ${isSelected ? 'bg-blue-100' : ''}
                   `}
-                  onClick={() => onDateSelect(day)}
+                  onClick={() => handleDateClick(day)}
                   onMouseEnter={() => setHoveredDate(day)}
                   onMouseLeave={() => setHoveredDate(null)}
                 >
@@ -140,6 +149,8 @@ const CalendarPanel = ({
         isOpen={isAddEventOpen}
         onClose={onCloseAddEvent}
         onSave={onSaveEvent}
+        editingEvent={editingEvent}
+        selectedDate={selectedDate}
       />
     </div>
   )

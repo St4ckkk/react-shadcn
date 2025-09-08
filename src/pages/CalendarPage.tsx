@@ -134,22 +134,37 @@ const mockEvents: Event[] = [
 const CalendarPage = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
   const [isAddEventOpen, setIsAddEventOpen] = useState(false)
+  const [editingEvent, setEditingEvent] = useState<Event | null>(null)
 
   const handleEventSelect = (event: Event) => {
     setSelectedDate(event.date)
+    setEditingEvent(event)
+    setIsAddEventOpen(true)
   }
 
   const handleAddEvent = () => {
+    setEditingEvent(null)
+    setIsAddEventOpen(true)
+  }
+
+  const handleOpenAddEvent = () => {
+    setEditingEvent(null)
     setIsAddEventOpen(true)
   }
 
   const handleCloseAddEvent = () => {
     setIsAddEventOpen(false)
+    setEditingEvent(null)
   }
 
   const handleSaveEvent = (eventData: any) => {
-    console.log('New event saved:', eventData)
+    if (editingEvent) {
+      console.log('Event updated:', { ...editingEvent, ...eventData })
+    } else {
+      console.log('New event saved:', eventData)
+    }
     setIsAddEventOpen(false)
+    setEditingEvent(null)
   }
 
   return (
@@ -166,6 +181,8 @@ const CalendarPage = () => {
         isAddEventOpen={isAddEventOpen}
         onCloseAddEvent={handleCloseAddEvent}
         onSaveEvent={handleSaveEvent}
+        editingEvent={editingEvent}
+        onOpenAddEvent={handleOpenAddEvent}
       />
     </div>
   )

@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { X, CalendarDays, Clock } from "lucide-react"
+import { useState, useEffect } from "react"
+import { X, CalendarDays } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -9,11 +9,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { format } from "date-fns"
+import type { Event } from "./calendar-sidebar"
 
 interface CalendarRightSidebarProps {
   isOpen: boolean
   onClose: () => void
   onSave: (event: any) => void
+  editingEvent?: Event | null
+  selectedDate?: Date | undefined
 }
 
 const DateTimePicker = ({ 
@@ -148,7 +151,7 @@ const DateTimePicker = ({
   )
 }
 
-const CalendarRightSidebar = ({ isOpen, onClose, onSave }: CalendarRightSidebarProps) => {
+const CalendarRightSidebar = ({ isOpen, onClose, onSave, editingEvent, selectedDate }: CalendarRightSidebarProps) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -156,6 +159,46 @@ const CalendarRightSidebar = ({ isOpen, onClose, onSave }: CalendarRightSidebarP
     endDateTime: { date: undefined as Date | undefined, time: "" },
     color: ""
   })
+
+  useEffect(() => {
+    if (editingEvent) {
+      setFormData({
+        title: editingEvent.title,
+        description: editingEvent.location || "",
+        startDateTime: { 
+          date: editingEvent.date, 
+          time: editingEvent.time 
+        },
+        endDateTime: { 
+          date: editingEvent.date, 
+          time: editingEvent.time 
+        },
+        color: editingEvent.type
+      })
+    } else if (selectedDate) {
+      setFormData({
+        title: "",
+        description: "",
+        startDateTime: { 
+          date: selectedDate, 
+          time: "9:00 AM" 
+        },
+        endDateTime: { 
+          date: selectedDate, 
+          time: "10:00 AM" 
+        },
+        color: ""
+      })
+    } else {
+      setFormData({
+        title: "",
+        description: "",
+        startDateTime: { date: undefined, time: "" },
+        endDateTime: { date: undefined, time: "" },
+        color: ""
+      })
+    }
+  }, [editingEvent, selectedDate])
 
   const handleSave = () => {
     onSave(formData)
@@ -185,7 +228,7 @@ const CalendarRightSidebar = ({ isOpen, onClose, onSave }: CalendarRightSidebarP
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-3 mb-5">
-            <h2 className="text-md font-bold">Add Event</h2>
+            <h2 className="text-md font-bold">{editingEvent ? 'Edit Event' : 'Add Event'}</h2>
             <Button variant="ghost" size="sm" onClick={onClose}>
               <X className="h-4 w-4" />
             </Button>
@@ -238,21 +281,21 @@ const CalendarRightSidebar = ({ isOpen, onClose, onSave }: CalendarRightSidebarP
                   <SelectValue placeholder="Select color" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="orange">Orange</SelectItem>
-                  <SelectItem value="blue">Blue</SelectItem>
-                  <SelectItem value="green">Green</SelectItem>
-                  <SelectItem value="purple">Purple</SelectItem>
-                  <SelectItem value="red">Red</SelectItem>
+                  <SelectItem value="meeting">Meeting</SelectItem>
+                  <SelectItem value="deadline">Deadline</SelectItem>
+                  <SelectItem value="event">Event</SelectItem>
+                  <SelectItem value="personal">Personal</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-          <div className="">
-            <Button onClick={handleSave} className=" bg-black text-white hover:bg-black/90">
-              Save
-            </Button>
-          </div>
+            <div className="">
+                <Button onClick={handleSave} className=" bg-black text-white hover:bg-black/90">
+                {editingEvent ? 'Update' : 'Save'}
+                </Button>
+            </div>
           </div>
           
+
         </div>
       </div>
     </>
