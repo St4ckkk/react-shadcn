@@ -19,7 +19,6 @@ interface CalendarPanelProps {
 const CalendarPanel = ({ 
   selectedDate, 
   onDateSelect, 
-  events,
   isAddEventOpen,
   onCloseAddEvent,
   onSaveEvent,
@@ -111,7 +110,7 @@ const CalendarPanel = ({
               </div>
             ))}
             
-            {calendarDays.map((day, dayIdx) => {
+            {calendarDays.map((day) => {
               const isCurrentMonth = isSameMonth(day, currentMonth)
               const isSelected = selectedDate && isSameDay(day, selectedDate)
               const isHovered = hoveredDate && isSameDay(day, hoveredDate)

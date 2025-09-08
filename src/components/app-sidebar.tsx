@@ -3,7 +3,6 @@ import {
   Calendar, 
   Home, 
   Inbox, 
-  Search, 
   Settings, 
   ChevronRight,
   AlertTriangle,

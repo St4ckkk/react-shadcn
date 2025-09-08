@@ -11,7 +11,7 @@ interface ImageBannerProps {
 }
 
 const ImageBanner = ({
-  onClose,
+  // onClose,
   action,
   title,
   image,
