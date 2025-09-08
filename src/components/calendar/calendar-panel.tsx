@@ -104,7 +104,7 @@ const CalendarPanel = ({
 
       <div className="flex-1">
         <div className="pl-4">
-          <div className="grid grid-cols-7 h-[600px] border border-gray-200">
+          <div className="grid grid-cols-7 h-[580px] border border-gray-200">
             {weekDays.map((day) => (
               <div key={day} className="text-center text-md font-bold text-gray-700 mt-1 max-h-[30px] border-b border-r border-gray-200">
                 {day}
