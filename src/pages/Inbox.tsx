@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { ChatSidebar } from "@/components/chat-sidebar"
-import { ChatPanel } from "@/components/chat-panel"
+import { ChatSidebar } from "@/components/chat/chat-sidebar"
+import { ChatPanel } from "@/components/chat/chat-panel"
 
 interface Chat {
   id: string

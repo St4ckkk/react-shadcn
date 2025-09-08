@@ -25,6 +25,7 @@ import {
   ChartArea,
   ChartBarBig,
   ChartPie,
+  FolderClosed
 } from "lucide-react"
 import { useState, useEffect } from "react"
 
@@ -64,9 +65,9 @@ const mainItems = [
     icon: Calendar,
   },
   {
-    title: "Search",
-    url: "/search",
-    icon: Search,
+    title: "File Manager",
+    url: "/file-manager",
+    icon: FolderClosed,
   },
   {
     title: "Settings",
