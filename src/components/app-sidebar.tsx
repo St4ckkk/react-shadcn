@@ -5,7 +5,6 @@ import {
   Inbox, 
   Settings, 
   ChevronRight,
-  AlertTriangle,
   Layers,
   Badge,
   Navigation,
@@ -24,9 +23,15 @@ import {
   ChartArea,
   ChartBarBig,
   ChartPie,
-  FolderClosed
+  FolderClosed,
+  Palette,
+  Database,
+  BarChart3,
+  Sparkles,
+  AlertTriangle,
+  User
 } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 import {
   Sidebar,
@@ -45,6 +50,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Badge as UIBadge } from "@/components/ui/badge"
+import { useLoadingState } from "@/hooks/loading-state"
 
 const mainItems = [
   {
@@ -68,39 +74,9 @@ const mainItems = [
     url: "/file-manager",
     icon: FolderClosed,
   },
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: Settings,
-  },
 ]
 
 const pageItems = [
-  {
-    title: "Login",
-    url: "/login",
-    icon: ImageIcon,
-  },
-  {
-    title: "Register",
-    url: "/register",
-    icon: ImageIcon,
-  },
-  {
-    title: "Forgot Password",
-    url: "/forgot-password",
-    icon: ImageIcon,
-  },
-  {
-    title: "404",
-    url: "/404",
-    icon: ImageIcon,
-  },
-  {
-    title: "500",
-    url: "/500",
-    icon: ImageIcon,
-  },
   {
     title: "Blank",
     url: "/blank",
@@ -125,73 +101,68 @@ const pageItems = [
 
 const componentItems = [
   {
-    title: "Alerts",
-    url: "/components/alerts",
-    icon: AlertTriangle,
-  },
-  {
     title: "Accordion",
-    url: "/components/accordion",
+    url: "/pages/components/accordion",
     icon: Layers,
   },
   {
     title: "Badges",
-    url: "/components/badges",
+    url: "/pages/components/badges",
     icon: Badge,
   },
   {
     title: "Breadcrumbs",
-    url: "/components/breadcrumbs",
+    url: "/pages/components/breadcrumbs",
     icon: Navigation,
   },
   {
     title: "Buttons",
-    url: "/components/buttons",
+    url: "/pages/components/buttons",
     icon: MousePointer,
   },
   {
     title: "Cards",
-    url: "/components/cards",
+    url: "/pages/components/cards",
     icon: CreditCard,
   },
   {
     title: "Carousel",
-    url: "/components/carousel",
+    url: "/pages/components/carousel",
     icon: ImageIcon,
   },
   {
     title: "List group",
-    url: "/components/list-group",
+    url: "/pages/components/list-group",
     icon: List,
   },
   {
     title: "Modal",
-    url: "/components/modal",
+    url: "/pages/components/modal",
     icon: Square,
   },
   {
     title: "Tabs",
-    url: "/components/tabs",
+    url: "/pages/components/tabs",
     icon: Layout,
   },
   {
     title: "Pagination",
-    url: "/components/pagination",
+    url: "/pages/components/pagination",
     icon: FileText,
   },
   {
     title: "Progress",
-    url: "/components/progress",
+    url: "/pages/components/progress",
     icon: CircleDot,
   },
   {
     title: "Spinners",
-    url: "/components/spinners",
+    url: "/pages/components/spinners",
     icon: Loader2,
   },
   {
     title: "Tooltips",
-    url: "/components/tooltips",
+    url: "/pages/components/tooltips",
     icon: HelpCircle,
   },
 ]
@@ -199,12 +170,12 @@ const componentItems = [
 const tablesComponents = [
   {
     title: "General Tables",
-    url: "/tables/general",
+    url: "/pages/tables/general",
     icon: Table,
   },
   {
     title: "Data Tables",
-    url: "/tables/data",
+    url: "/pages/tables/data",
     icon: Table,
   },
 ]
@@ -212,45 +183,114 @@ const tablesComponents = [
 const chartsComponents = [
   {
     title: "Chart.js",
-    url: "/charts/chartjs",
+    url: "/pages/charts/chartjs",
     icon: ChartBar
   },
   {
     title: "Recharts",
-    url: "/charts/recharts",
+    url: "/pages/charts/recharts",
     icon: ChartArea
   },
   {
     title: "ApexCharts",
-    url: "/charts/apexcharts",
+    url: "/pages/charts/apexcharts",
     icon: ChartBarBig
   },
   {
     title: "ECharts",
-    url: "/charts/echarts",
+    url: "/pages/charts/echarts",
     icon: ChartPie
+  }
+]
+
+const errorComponents = [
+  {
+    title: "404",
+    url: "/pages/error/404",
+    icon: ImageIcon
+  },
+  {
+    title: "500",
+    url: "/pages/error/500",
+    icon: ImageIcon
+  },
+  {
+    title: "403",
+    url: "/pages/error/403",
+    icon: ImageIcon
+  },
+  {
+    title: "401",
+    url: "/pages/error/401",
+    icon: ImageIcon
+  }
+]
+
+const settingsComponents = [
+  {
+    title: "Profile",
+    url: "/pages/settings/profile",
+    icon: ImageIcon
+  },
+  {
+    title: 'Account',
+    url: "/pages/settings/account",
+    icon: ImageIcon
+  },
+  {
+    title: 'Appearances',
+    url: "/pages/settings/appearances",
+    icon: ImageIcon
+  },
+  {
+    title: 'Notifications',
+    url: "/pages/settings/notifications",
+    icon: ImageIcon
+  },
+  {
+    title: 'Display',
+    url: "/pages/settings/display",
+    icon: ImageIcon
+  },
+]
+
+const authenticationComponents = [
+  {
+    title: "Login",
+    url: "/pages/authentication/login",
+    icon: ImageIcon
+  },
+  {
+    title: "Register",
+    url: "/pages/authentication/register",
+    icon: ImageIcon
+  },
+  {
+    title: "Forgot Password",
+    url: "/pages/authentication/forgot-password",
+    icon: ImageIcon
   }
 ]
 
 const iconComponents = [
   {
     title: "Lucide",
-    url: "/icons/lucide",
+    url: "/pages/icons/lucide",
     icon: ImageIcon
   },
   {
     title: "Bootstrap Icons",
-    url: "/icons/bootstrap",
+    url: "/pages/icons/bootstrap",
     icon: ImageIcon
   }
-]
+] 
 
 function CollapsibleSection({ 
   section, 
   isOpen, 
   setIsOpen
 }: { 
-  section: { id: string; title: string; items: typeof componentItems }
+  section: { id: string; title: string; items: typeof componentItems; icon: any }
   isOpen: boolean
   setIsOpen: (open: boolean) => void
 }) {
@@ -267,14 +307,17 @@ function CollapsibleSection({
           <SidebarMenuItem>
             <SidebarMenuButton 
               onClick={() => setIsOpen(!isOpen)}
-              className="cursor-pointer w-full justify-start"
+              className="cursor-pointer w-full justify-between"
             >
+              <div className="flex items-center gap-2">
+                <section.icon className="h-4 w-4" />
+                <span>{section.title}</span>
+              </div>
               <ChevronRight 
-                className={`transition-transform duration-200 ${
+                className={`h-4 w-4 transition-transform duration-200 ${
                   isOpen ? 'rotate-90' : ''
                 }`} 
               />
-              <span>{section.title}</span>
             </SidebarMenuButton>
             {isOpen && (
               <SidebarMenuSub>
@@ -302,37 +345,57 @@ function CollapsibleSection({
 
 export function AppSidebar() {
   const location = useLocation()
-  const [isLoading, setIsLoading] = useState(true)
   const [isComponentsOpen, setIsComponentsOpen] = useState(false)
   const [isTablesOpen, setIsTablesOpen] = useState(false)
   const [isChartsOpen, setIsChartsOpen] = useState(false)
   const [isIconsOpen, setIsIconsOpen] = useState(false)
-  
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 200)
-    return () => clearTimeout(timer)
-  }, [])
+  const [isErrorOpen, setIsErrorOpen] = useState(false)
+  const [isAuthenticationOpen, setIsAuthenticationOpen] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const isLoading = useLoadingState(200)
   
   const collapsibleSections = [
     {
       id: 'components',
       title: 'UI Components',
       items: componentItems,
+      icon: Palette,
     },
     {
       id: 'tables',
       title: 'Tables', 
       items: tablesComponents,
+      icon: Database,
     },
     {
       id: 'charts',
       title: 'Charts', 
       items: chartsComponents,
+      icon: BarChart3,
     },
     {
       id: 'icons',
       title: 'Icons', 
       items: iconComponents,
+      icon: Sparkles,
+    },
+    {
+      id: 'error',
+      title: 'Error', 
+      items: errorComponents,
+      icon: AlertTriangle,
+    },
+    {
+      id: 'authentication',
+      title: 'Authentication', 
+      items: authenticationComponents,
+      icon: User,
+    },
+    {
+      id: 'settings',
+      title: 'Settings', 
+      items: settingsComponents,
+      icon: Settings,
     }
   ]
 
@@ -448,9 +511,9 @@ export function AppSidebar() {
           </SidebarGroup>
 
           {collapsibleSections.map((section, index) => {
-            const stateMap = [isComponentsOpen, isTablesOpen, isChartsOpen, isIconsOpen]
-            const setStateMap = [setIsComponentsOpen, setIsTablesOpen, setIsChartsOpen, setIsIconsOpen]
-            
+            const stateMap = [isComponentsOpen, isTablesOpen, isChartsOpen, isIconsOpen, isErrorOpen, isAuthenticationOpen, isSettingsOpen]
+            const setStateMap = [setIsComponentsOpen, setIsTablesOpen, setIsChartsOpen, setIsIconsOpen, setIsErrorOpen, setIsAuthenticationOpen, setIsSettingsOpen]
+  
             return (
               <CollapsibleSection 
                 key={section.id}

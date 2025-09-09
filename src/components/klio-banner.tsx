@@ -1,19 +1,15 @@
-import { type ReactNode, useState, useEffect } from "react"
+import { type ReactNode } from "react"
 import { ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import ImageBanner from "./img-banner"
 import Shuffle from './shuffle'
+import { useLoadingState } from "@/hooks/loading-state"
 
 const KlioBanner = () => {
-  const [isLoading, setIsLoading] = useState(true)
+  const isLoading = useLoadingState(200)
 
-  useEffect(() => {
-    const img = new Image()
-    img.onload = () => setIsLoading(false)
-    img.onerror = () => setIsLoading(false)
-    img.src = '/klio-banner.svg'
-  }, [])
+
 
   const handleClose = () => {
     console.log('Banner closed')
