@@ -1,71 +1,83 @@
 import { Routes, Route } from 'react-router-dom'
 import Layout from "@/components/layout/layout"
+import PageTitle from "@/components/PageTitle"
 import Home from "@/pages/Home"
 import Inbox from "@/pages/Inbox"
 import CalendarPage from '@/pages/CalendarPage'
-import UnderConstructionPage from '@/pages/UnderConstructionPage'
-import Login from '@/pages/Login'
-import Register from '@/pages/Register'
+import Login from '@/pages/authentication/Login'
+import Register from '@/pages/authentication/Register'
 import ForgotPassword from '@/pages/ForgotPassword'
+import NotFound from '@/pages/error/NotFound'
+import UnderConstructionPage from '@/pages/UnderConstructionPage'
+import ServerError from '@/pages/error/ServerError'
+import Forbidden from '@/pages/error/Forbidden'
+import NoAccess from '@/pages/error/NoAccess'
+import Profile from '@/pages/settings/Profile'
 
 const App = () => {
   return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/inbox" element={<Inbox />} />
-        <Route path="/calendar" element={<CalendarPage />} />
+    <>
+      <PageTitle />
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/inbox" element={<Inbox />} />
+          <Route path="/calendar" element={<CalendarPage />} />
+
+          {/* Authentication Pages */}
+          <Route path="/pages/authentication/login" element={<Login />} />
+          <Route path="/pages/authentication/register" element={<Register />} />
+          <Route path="/pages/authentication/forgot-password" element={<ForgotPassword />} />
+          
+          <Route path="/file-manager" element={<UnderConstructionPage />} />
+
+          <Route path="/pages/settings/profile" element={<Profile />} />
+          <Route path="/pages/settings/account" element={<UnderConstructionPage />} />
+          <Route path="/pages/settings/appearance" element={<UnderConstructionPage />} />
+          <Route path="/pages/settings/notifications" element={<UnderConstructionPage />} />
+          <Route path="/pages/settings/display" element={<UnderConstructionPage />} />
+
+          
+
+          {/* Error Pages */}
+          <Route path="/pages/error/404" element={<NotFound />} />
+          <Route path="/pages/error/500" element={<ServerError />} />
+          <Route path="/pages/error/403" element={<Forbidden />} />
+          <Route path="/pages/error/401" element={<NoAccess />} />
+          <Route path="/blank" element={<UnderConstructionPage />} />
+          <Route path="/pricing" element={<UnderConstructionPage />} />
+          <Route path="/contact" element={<UnderConstructionPage />} />
         
-        <Route path="/file-manager" element={<UnderConstructionPage />} />
-        <Route path="/settings" element={<UnderConstructionPage />} />
-        
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/404" element={<UnderConstructionPage />} />
-        <Route path="/500" element={<UnderConstructionPage />} />
-        <Route path="/blank" element={<UnderConstructionPage />} />
-        <Route path="/pricing" element={<UnderConstructionPage />} />
-        <Route path="/contact" element={<UnderConstructionPage />} />
-        <Route path="/profile" element={<UnderConstructionPage />} />
-        
-        <Route path="/components/alerts" element={<UnderConstructionPage />} />
-        <Route path="/components/avatar" element={<UnderConstructionPage />} />
-        <Route path="/components/badge" element={<UnderConstructionPage />} />
-        <Route path="/components/breadcrumb" element={<UnderConstructionPage />} />
-        <Route path="/components/button" element={<UnderConstructionPage />} />
-        <Route path="/components/calendar" element={<UnderConstructionPage />} />
-        <Route path="/components/card" element={<UnderConstructionPage />} />
-        <Route path="/components/dropdown-menu" element={<UnderConstructionPage />} />
-        <Route path="/components/input" element={<UnderConstructionPage />} />
-        <Route path="/components/label" element={<UnderConstructionPage />} />
-        <Route path="/components/popover" element={<UnderConstructionPage />} />
-        <Route path="/components/progress" element={<UnderConstructionPage />} />
-        <Route path="/components/scroll-area" element={<UnderConstructionPage />} />
-        <Route path="/components/select" element={<UnderConstructionPage />} />
-        <Route path="/components/separator" element={<UnderConstructionPage />} />
-        <Route path="/components/sheet" element={<UnderConstructionPage />} />
-        <Route path="/components/sidebar" element={<UnderConstructionPage />} />
-        <Route path="/components/skeleton" element={<UnderConstructionPage />} />
-        <Route path="/components/table" element={<UnderConstructionPage />} />
-        <Route path="/components/textarea" element={<UnderConstructionPage />} />
-        <Route path="/components/tooltip" element={<UnderConstructionPage />} />
-        
-        <Route path="/charts/area" element={<UnderConstructionPage />} />
-        <Route path="/charts/bar" element={<UnderConstructionPage />} />
-        <Route path="/charts/line" element={<UnderConstructionPage />} />
-        <Route path="/charts/pie" element={<UnderConstructionPage />} />
-        
-        <Route path="/forms/advanced" element={<UnderConstructionPage />} />
-        <Route path="/forms/basic" element={<UnderConstructionPage />} />
-        <Route path="/forms/validation" element={<UnderConstructionPage />} />
-        
-        <Route path="/tables/basic" element={<UnderConstructionPage />} />
-        <Route path="/tables/advanced" element={<UnderConstructionPage />} />
-        
-        <Route path="*" element={<UnderConstructionPage />} />
-      </Routes>
-    </Layout>
+          
+          <Route path="/pages/components/accordion" element={<UnderConstructionPage />} />
+          <Route path="/pages/components/badges" element={<UnderConstructionPage />} />
+          <Route path="/pages/components/breadcrumbs" element={<UnderConstructionPage />} />
+          <Route path="/pages/components/buttons" element={<UnderConstructionPage />} />
+          <Route path="/pages/components/cards" element={<UnderConstructionPage />} />
+          <Route path="/pages/components/carousel" element={<UnderConstructionPage />} />
+          <Route path="/pages/components/list-group" element={<UnderConstructionPage />} />
+          <Route path="/pages/components/modal" element={<UnderConstructionPage />} />
+          <Route path="/pages/components/tabs" element={<UnderConstructionPage />} />
+          <Route path="/pages/components/pagination" element={<UnderConstructionPage />} />
+          <Route path="/pages/components/progress" element={<UnderConstructionPage />} />
+          <Route path="/pages/components/spinners" element={<UnderConstructionPage />} />
+          <Route path="/pages/components/tooltips" element={<UnderConstructionPage />} />
+          
+          <Route path="/pages/tables/general" element={<UnderConstructionPage />} />
+          <Route path="/pages/tables/data" element={<UnderConstructionPage />} />
+          
+          <Route path="/pages/charts/chartjs" element={<UnderConstructionPage />} />
+          <Route path="/pages/charts/recharts" element={<UnderConstructionPage />} />
+          <Route path="/pages/charts/apexcharts" element={<UnderConstructionPage />} />
+          <Route path="/pages/charts/echarts" element={<UnderConstructionPage />} />
+          
+          <Route path="/pages/icons/lucide" element={<UnderConstructionPage />} />
+          <Route path="/pages/icons/bootstrap" element={<UnderConstructionPage />} />
+          
+      
+        </Routes>
+      </Layout>
+    </>
   )
 }
 

@@ -65,7 +65,7 @@ export default function Login() {
                 </Label>
               </div>
               <Button variant="link" className="p-0 h-auto text-sm text-gray-300 hover:text-white">
-                Forgot your password?
+                <Link to="/forgot-password">Forgot your password?</Link>
               </Button>
             </div>
             
