@@ -8,21 +8,22 @@ interface ImageBannerProps {
   image: ReactNode
   renderInteractiveArea?: (props: { children: ReactNode }) => ReactNode
   className?: string
+  isMobile?: boolean
 }
 
 const ImageBanner = ({
-  // onClose,
   action,
   title,
   image,
   renderInteractiveArea,
-  className = ""
+  className = "",
+  isMobile = false
 }: ImageBannerProps) => {
   const [isHovered, setIsHovered] = useState(false)
 
   const content = (
     <div 
-      className={`relative h-[550px] overflow-hidden rounded-lg shadow-lg cursor-pointer transition-all duration-500 ease-out ${className}`}
+      className={`relative overflow-hidden rounded-lg shadow-lg cursor-pointer transition-all duration-500 ease-out ${isMobile ? 'h-[300px]' : 'h-[550px]'} ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -36,7 +37,7 @@ const ImageBanner = ({
         className={`absolute inset-0 transition-all duration-500 ease-out ${isHovered ? 'bg-black/30' : 'bg-black/20'}`} 
       />
       
-      <div className="relative z-10 p-6 h-full flex flex-col justify-between">
+      <div className={`relative z-10 h-full flex flex-col justify-between ${isMobile ? 'p-4' : 'p-6'}`}>
         <div className="text-white">
           {title}
         </div>

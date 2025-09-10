@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText as GSAPSplitText } from 'gsap/SplitText';
 import { useGSAP } from '@gsap/react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 gsap.registerPlugin(ScrollTrigger, GSAPSplitText, useGSAP);
 
@@ -57,6 +58,7 @@ const Shuffle: React.FC<ShuffleProps> = ({
   respectReducedMotion = true,
   triggerOnHover = true
 }) => {
+  const isMobile = useIsMobile();
   const ref = useRef<HTMLElement>(null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [ready, setReady] = useState(false);
@@ -348,7 +350,7 @@ const Shuffle: React.FC<ShuffleProps> = ({
     }
   );
 
-  const baseTw = 'inline-block whitespace-normal break-words will-change-transform uppercase text-[4rem] leading-none';
+  const baseTw = `inline-block whitespace-normal break-words will-change-transform uppercase leading-none ${isMobile ? 'text-2xl' : 'text-[4rem]'}`;
   const commonStyle: React.CSSProperties = {
     textAlign,
     fontFamily: `'Press Start 2P', sans-serif`,

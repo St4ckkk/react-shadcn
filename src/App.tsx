@@ -21,6 +21,10 @@ import Account from '@/pages/settings/Account'
 import Appearance from '@/pages/settings/Appearance'
 import Notification from '@/pages/settings/Notification'
 
+import Table from '@/pages/ui-components/Table'
+
+import Kanban from './pages/Kanban'
+
 const App = () => {
   return (
     <>
@@ -30,6 +34,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/inbox" element={<Inbox />} />
           <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/kanban" element={<Kanban />} />
 
           {/* Authentication Pages */}
           <Route path="/pages/authentication/login" element={<Login />} />
@@ -71,8 +76,7 @@ const App = () => {
           <Route path="/pages/components/spinners" element={<UnderConstructionPage />} />
           <Route path="/pages/components/tooltips" element={<UnderConstructionPage />} />
           
-          <Route path="/pages/tables/general" element={<UnderConstructionPage />} />
-          <Route path="/pages/tables/data" element={<UnderConstructionPage />} />
+          <Route path="/pages/components/tables" element={<Table />} />
           
           <Route path="/pages/charts/chartjs" element={<UnderConstructionPage />} />
           <Route path="/pages/charts/recharts" element={<UnderConstructionPage />} />
