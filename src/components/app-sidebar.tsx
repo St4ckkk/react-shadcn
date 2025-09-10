@@ -239,17 +239,12 @@ const settingsComponents = [
   },
   {
     title: 'Appearances',
-    url: "/pages/settings/appearances",
+    url: "/pages/settings/appearance",
     icon: ImageIcon
   },
   {
     title: 'Notifications',
     url: "/pages/settings/notifications",
-    icon: ImageIcon
-  },
-  {
-    title: 'Display',
-    url: "/pages/settings/display",
     icon: ImageIcon
   },
 ]
