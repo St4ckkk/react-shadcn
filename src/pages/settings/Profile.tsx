@@ -5,11 +5,14 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Plus, X } from "lucide-react"
+import { useIsMobile } from "@/hooks/use-mobile"
 import SettingsHeader from "@/components/settings/settings-header"
 import SettingsContainer from "@/components/settings/settings-container"
 import SettingsRightPanel from "@/components/settings/settings-right-panel"
+import SettingsMobileNav from "@/components/settings/settings-mobile-nav"
 
 export default function Profile() {
+  const isMobile = useIsMobile()
   const [username, setUsername] = useState("Klio Solutions")
   const [bio, setBio] = useState("I own a computer.")
   const [urls, setUrls] = useState([
@@ -33,7 +36,7 @@ export default function Profile() {
     <div className="">
       <SettingsHeader />
       
-      <div className="flex gap-6">
+      <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} ${isMobile ? 'gap-4' : 'gap-6'} ${isMobile ? 'pb-20' : ''}`}>
         <SettingsContainer>
           <div className="space-y-6">
             <div className="space-y-2">
@@ -84,24 +87,30 @@ export default function Profile() {
               </p>
               <div className="space-y-2">
                 {urls.map((url, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <Input value={url} readOnly />
+                  <div key={index} className={`flex items-center gap-2 ${isMobile ? 'flex-col' : 'flex-row'}`}>
+                    <Input value={url} readOnly className={isMobile ? 'w-full' : ''} />
                     <Button
                       variant="outline"
                       size="icon"
                       onClick={() => removeUrl(index)}
+                      className={isMobile ? 'w-full' : ''}
                     >
                       <X className="h-4 w-4" />
                     </Button>
                   </div>
                 ))}
-                <div className="flex items-center gap-2">
+                <div className={`flex items-center gap-2 ${isMobile ? 'flex-col' : 'flex-row'}`}>
                   <Input
                     placeholder="Enter URL"
                     value={newUrl}
                     onChange={(e) => setNewUrl(e.target.value)}
+                    className={isMobile ? 'w-full' : ''}
                   />
-                  <Button variant="outline" onClick={addUrl}>
+                  <Button 
+                    variant="outline" 
+                    onClick={addUrl}
+                    className={isMobile ? 'w-full' : ''}
+                  >
                     <Plus className="h-4 w-4 mr-2" />
                     Add URL
                   </Button>
@@ -109,14 +118,16 @@ export default function Profile() {
               </div>
             </div>
 
-            <Button className="">
+            <Button className={`${isMobile ? 'w-full' : ''}`}>
               Update profile
             </Button>
           </div>
         </SettingsContainer>
         
-        <SettingsRightPanel />
+        {!isMobile && <SettingsRightPanel />}
       </div>
+      
+      {isMobile && <SettingsMobileNav />}
     </div>
   )
 }

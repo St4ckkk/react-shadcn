@@ -7,11 +7,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar"
 import { CalendarDays } from "lucide-react"
 import { format } from "date-fns"
+import { useIsMobile } from "@/hooks/use-mobile"
 import SettingsHeader from "@/components/settings/settings-header"
 import SettingsContainer from "@/components/settings/settings-container"
 import SettingsRightPanel from "@/components/settings/settings-right-panel"
+import SettingsMobileNav from "@/components/settings/settings-mobile-nav"
 
 export default function Account() {
+  const isMobile = useIsMobile()
   const [name, setName] = useState("")
   const [dateOfBirth, setDateOfBirth] = useState<Date>()
   const [language, setLanguage] = useState("")
@@ -19,7 +22,7 @@ export default function Account() {
   return (
     <div className="">
       <SettingsHeader />
-      <div className="flex gap-6">
+      <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} ${isMobile ? 'gap-4' : 'gap-6'} ${isMobile ? 'pb-20' : ''}`}>
         <SettingsContainer>
           <div className="space-y-6">
               <div className="space-y-2">
@@ -36,12 +39,11 @@ export default function Account() {
                            
                 </p>
               </div>
-@
               <div className="space-y-2">
                 <Label>Date of birth</Label>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <div className="relative w-64">
+                    <div className={`relative ${isMobile ? 'w-full' : 'w-64'}`}>
                       <Input
                         placeholder="Pick a date"
                         value={dateOfBirth ? format(dateOfBirth, "PPP") : ""}
@@ -68,7 +70,7 @@ export default function Account() {
               <div className="space-y-2">
                 <Label htmlFor="language">Language</Label>
                 <Select value={language} onValueChange={setLanguage}>
-                  <SelectTrigger className="w-64">
+                  <SelectTrigger className={`${isMobile ? 'w-full' : 'w-64'}`}>
                     <SelectValue placeholder="Select language" />
                   </SelectTrigger>
                   <SelectContent>
@@ -89,14 +91,16 @@ export default function Account() {
                 </p>
               </div>
 
-              <Button className="">
+              <Button className={`${isMobile ? 'w-full' : ''}`}>
                 Update account
               </Button>
           </div>
         </SettingsContainer>
         
-        <SettingsRightPanel />
+        {!isMobile && <SettingsRightPanel />}
       </div>
+      
+      {isMobile && <SettingsMobileNav />}
     </div>
   )
 }
