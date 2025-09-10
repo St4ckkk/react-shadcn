@@ -17,16 +17,19 @@ interface CalendarRightSidebarProps {
   onSave: (event: any) => void
   editingEvent?: Event | null
   selectedDate?: Date | undefined
+  isMobile?: boolean
 }
 
 const DateTimePicker = ({ 
   value, 
   onChange, 
-  placeholder 
+  placeholder,
+  isMobile = false
 }: { 
   value: { date: Date | undefined, time: string }, 
   onChange: (value: { date: Date | undefined, time: string }) => void,
-  placeholder: string 
+  placeholder: string,
+  isMobile?: boolean
 }) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(value.date)
   const [selectedTime, setSelectedTime] = useState(value.time)
@@ -79,9 +82,9 @@ const DateTimePicker = ({
           }
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <div className="flex">
-          <div className="border-r">
+      <PopoverContent className={`${isMobile ? 'w-[90vw]' : 'w-auto'} p-0`} align="start">
+        <div className={`${isMobile ? 'flex-col' : 'flex'}`}>
+          <div className={`${isMobile ? 'border-b' : 'border-r'}`}>
             <Calendar
               mode="single"
               selected={selectedDate}
@@ -89,8 +92,8 @@ const DateTimePicker = ({
               initialFocus
             />
           </div>
-          <div className="flex">
-            <ScrollArea className="w-16 h-64">
+          <div className={`${isMobile ? 'flex justify-center' : 'flex'}`}>
+            <ScrollArea className={`${isMobile ? 'w-20' : 'w-16'} h-64`}>
               <div className="space-y-0">
                 {hours.map((hour) => (
                   <div
@@ -108,7 +111,7 @@ const DateTimePicker = ({
                 ))}
               </div>
             </ScrollArea>
-            <ScrollArea className="w-16 h-64 border-r">
+            <ScrollArea className={`${isMobile ? 'w-20' : 'w-16'} h-64 ${isMobile ? 'border-b' : 'border-r'}`}>
               <div className="space-y-0">
                 {minutes.map((minute) => (
                   <div
@@ -126,7 +129,7 @@ const DateTimePicker = ({
                 ))}
               </div>
             </ScrollArea>
-            <div className="w-16 h-64">
+            <div className={`${isMobile ? 'w-20' : 'w-16'} h-64`}>
               <div className="space-y-0">
                 {periods.map((period) => (
                   <div
@@ -151,7 +154,7 @@ const DateTimePicker = ({
   )
 }
 
-const CalendarRightSidebar = ({ isOpen, onClose, onSave, editingEvent, selectedDate }: CalendarRightSidebarProps) => {
+const CalendarRightSidebar = ({ isOpen, onClose, onSave, editingEvent, selectedDate, isMobile = false }: CalendarRightSidebarProps) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -214,68 +217,78 @@ const CalendarRightSidebar = ({ isOpen, onClose, onSave, editingEvent, selectedD
 
   return (
     <>
+      {/* Overlay */}
       <div 
         className={`fixed inset-0 z-50 bg-black/50 transition-opacity duration-300 ease-in-out ${
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`} 
         onClick={onClose}
       />
+      
+      {/* Right Sidebar - positioned to appear alongside the events drawer */}
       <div 
-        className={`fixed right-0 top-0 h-full w-96 bg-white shadow-lg transition-transform duration-300 ease-in-out z-50 ${
+        className={`fixed right-0 top-0 h-full ${isMobile ? 'w-[70vw]' : 'w-96'} bg-white shadow-lg transition-transform duration-300 ease-in-out z-50 ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`} 
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-3 mb-5">
-            <h2 className="text-md font-bold">{editingEvent ? 'Edit Event' : 'Add Event'}</h2>
-            <Button variant="ghost" size="sm" onClick={onClose}>
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">
+              {editingEvent ? 'Edit Event' : 'Add Event'}
+            </h2>
+            <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
               <X className="h-4 w-4" />
             </Button>
           </div>
           
-          <div className="flex-1 p-4 space-y-7">
+          {/* Form Content */}
+          <div className="flex-1 p-4 space-y-6 overflow-y-auto">
             <div className="space-y-2">
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title" className="text-sm font-medium text-gray-700">Title</Label>
               <Input
                 id="title"
-                placeholder=""
+                placeholder="Enter event title"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                className="w-full"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description" className="text-sm font-medium text-gray-700">Description</Label>
               <Textarea
                 id="description"
-                placeholder=""
+                placeholder="Enter event description"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="min-h-[60px]"
+                className="min-h-[80px] w-full"
               />
             </div>
             
             <div className="space-y-2">
-              <Label>Start date</Label>
+              <Label className="text-sm font-medium text-gray-700">Start date</Label>
               <DateTimePicker
                 value={formData.startDateTime}
                 onChange={(value) => setFormData({ ...formData, startDateTime: value })}
                 placeholder="MM/DD/YYYY hh:mm aa"
+                isMobile={isMobile}
               />
             </div>
             
             <div className="space-y-2">
-              <Label>End date</Label>
+              <Label className="text-sm font-medium text-gray-700">End date</Label>
               <DateTimePicker
                 value={formData.endDateTime}
                 onChange={(value) => setFormData({ ...formData, endDateTime: value })}
                 placeholder="MM/DD/YYYY hh:mm aa"
+                isMobile={isMobile}
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="color">Color</Label>
+              <Label htmlFor="color" className="text-sm font-medium text-gray-700">Color</Label>
               <Select value={formData.color} onValueChange={(value) => setFormData({ ...formData, color: value })}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select color" />
@@ -288,14 +301,17 @@ const CalendarRightSidebar = ({ isOpen, onClose, onSave, editingEvent, selectedD
                 </SelectContent>
               </Select>
             </div>
-            <div className="">
-                <Button onClick={handleSave} className=" bg-black text-white hover:bg-black/90">
-                {editingEvent ? 'Update' : 'Save'}
-                </Button>
-            </div>
           </div>
           
-
+          {/* Footer with Save Button */}
+          <div className="p-4 border-t border-gray-200">
+            <Button 
+              onClick={handleSave} 
+              className="w-full bg-black text-white hover:bg-black/90 h-10"
+            >
+              {editingEvent ? 'Update Event' : 'Save Event'}
+            </Button>
+          </div>
         </div>
       </div>
     </>
