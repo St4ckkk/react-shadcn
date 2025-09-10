@@ -1,9 +1,10 @@
-import { Search, Plus, Check, MoreHorizontal } from "lucide-react"
+import { Search, Plus, Check, MoreHorizontal, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,6 +30,8 @@ interface ChatSidebarProps {
   onChatSelect: (chat: Chat) => void
   searchQuery: string
   onSearchChange: (query: string) => void
+  isMobile?: boolean
+  onBackToChats?: () => void
 }
 
 export function ChatSidebar({ 
@@ -36,17 +39,31 @@ export function ChatSidebar({
   selectedChat, 
   onChatSelect, 
   searchQuery, 
-  onSearchChange 
+  onSearchChange,
+  isMobile = false,
+  onBackToChats
 }: ChatSidebarProps) {
   const filteredChats = chats.filter(chat =>
     chat.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   return (
-    <div className="w-85 border border-gray-200 rounded-lg flex flex-col bg-white h-[650px]">
+    <div className={`${isMobile ? 'w-full' : 'w-85'} border border-gray-200 rounded-lg flex flex-col bg-white h-[650px]`}>
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-xl font-bold text-gray-900">Chats</h1>
+          <div className="flex items-center gap-3">
+            {isMobile && onBackToChats && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onBackToChats}
+                className="h-8 w-8 p-0"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            )}
+            <h1 className="text-xl font-bold text-gray-900">Chats</h1>
+          </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="sm" variant="outline" className="h-8 w-8 p-0 rounded-full">
@@ -122,7 +139,6 @@ export function ChatSidebar({
                 </div>
               </div>
               
-     
               <div className="absolute top-1/2 right-7 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>

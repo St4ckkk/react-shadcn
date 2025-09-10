@@ -1,8 +1,9 @@
-import { Phone, Video, MoreHorizontal, Paperclip, Mic, Send, Smile, CheckCheck } from "lucide-react"
+import { Phone, Video, MoreHorizontal, Paperclip, Mic, Send, Smile, CheckCheck, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,6 +45,8 @@ interface ChatPanelProps {
   messageInput: string
   onMessageInputChange: (value: string) => void
   onSendMessage: () => void
+  isMobile?: boolean
+  onBackToChats?: () => void
 }
 
 export function ChatPanel({ 
@@ -51,14 +54,16 @@ export function ChatPanel({
   messages, 
   messageInput, 
   onMessageInputChange, 
-  onSendMessage 
+  onSendMessage,
+  isMobile = false,
+  onBackToChats
 }: ChatPanelProps) {
   if (!selectedChat) {
     return (
       <div className="flex-1 flex items-center justify-center bg-white">
         <div className="text-center">
           <div className="w-32 h-32 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-            <div className="text-4xl">��</div>
+            <div className="text-4xl"></div>
           </div>
           <h3 className="text-lg font-semibold mb-2 text-gray-900">Select a chat to start messaging</h3>
           <p className="text-gray-500">Choose a conversation from the sidebar to begin</p>
@@ -68,9 +73,19 @@ export function ChatPanel({
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-white h-[650px]">
+    <div className={`flex-1 flex flex-col bg-white h-[650px] ${isMobile ? 'pb-20' : ''}`}>
       <div className="ml-2 mr-2 mb-2 flex items-center justify-between">
         <div className="flex items-center gap-3">
+          {isMobile && onBackToChats && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onBackToChats}
+              className="h-8 w-8 p-0"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          )}
           <div className="relative">
             <Avatar className="h-10 w-10">
               <AvatarImage src={selectedChat.avatar} />

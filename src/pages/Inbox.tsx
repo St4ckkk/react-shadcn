@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { ChatSidebar } from "@/components/chat/chat-sidebar"
 import { ChatPanel } from "@/components/chat/chat-panel"
+import { ChatMobileNav } from "@/components/chat/chat-mobile-nav"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 interface Chat {
   id: string
@@ -283,14 +285,59 @@ const mockMessages: Message[] = [
 ]
 
 export default function InboxPage() {
+  const isMobile = useIsMobile()
   const [selectedChat, setSelectedChat] = useState<Chat | null>(mockChats[0])
   const [searchQuery, setSearchQuery] = useState("")
   const [messageInput, setMessageInput] = useState("")
+  const [activeTab, setActiveTab] = useState<'chats' | 'calls' | 'groups' | 'settings'>('chats')
+  const [showChatList, setShowChatList] = useState(true)
 
   const handleSendMessage = () => {
     if (messageInput.trim()) {
       setMessageInput("")
     }
+  }
+
+  const handleChatSelect = (chat: Chat) => {
+    setSelectedChat(chat)
+    if (isMobile) {
+      setShowChatList(false)
+    }
+  }
+
+  const handleBackToChats = () => {
+    setShowChatList(true)
+  }
+
+  if (isMobile) {
+    return (
+      <div className="flex h-full relative">
+        {showChatList ? (
+          <ChatSidebar
+            chats={mockChats}
+            selectedChat={selectedChat}
+            onChatSelect={handleChatSelect}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            isMobile={true}
+          />
+        ) : (
+          <ChatPanel
+            selectedChat={selectedChat}
+            messages={mockMessages}
+            messageInput={messageInput}
+            onMessageInputChange={setMessageInput}
+            onSendMessage={handleSendMessage}
+            isMobile={true}
+            onBackToChats={handleBackToChats}
+          />
+        )}
+        <ChatMobileNav 
+          activeTab={activeTab} 
+          onTabChange={setActiveTab} 
+        />
+      </div>
+    )
   }
 
   return (
@@ -301,7 +348,7 @@ export default function InboxPage() {
         onChatSelect={setSelectedChat}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-/>
+      />
       <ChatPanel
         selectedChat={selectedChat}
         messages={mockMessages}
@@ -310,6 +357,5 @@ export default function InboxPage() {
         onSendMessage={handleSendMessage}
       />
     </div>
-
   )
 }

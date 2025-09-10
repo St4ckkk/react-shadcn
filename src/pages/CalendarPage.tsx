@@ -1,6 +1,8 @@
 import { useState } from "react"
 import CalendarSidebar, { type Event } from "@/components/calendar/calendar-sidebar"
 import CalendarPanel from "@/components/calendar/calendar-panel"
+import CalendarRightSidebar from "@/components/calendar/calendar-right-sidebar"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 const mockEvents: Event[] = [
   {
@@ -132,24 +134,31 @@ const mockEvents: Event[] = [
 ]
 
 const CalendarPage = () => {
+  const isMobile = useIsMobile()
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
   const [isAddEventOpen, setIsAddEventOpen] = useState(false)
   const [editingEvent, setEditingEvent] = useState<Event | null>(null)
+  const [showEventsDrawer, setShowEventsDrawer] = useState(false)
 
   const handleEventSelect = (event: Event) => {
     setSelectedDate(event.date)
     setEditingEvent(event)
     setIsAddEventOpen(true)
+    // Don't close the events drawer on mobile
   }
 
   const handleAddEvent = () => {
     setEditingEvent(null)
     setIsAddEventOpen(true)
+    // Don't close the events drawer on mobile
   }
 
   const handleOpenAddEvent = () => {
     setEditingEvent(null)
     setIsAddEventOpen(true)
+    if (isMobile) {
+      setShowEventsDrawer(false)
+    }
   }
 
   const handleCloseAddEvent = () => {
@@ -165,6 +174,61 @@ const CalendarPage = () => {
     }
     setIsAddEventOpen(false)
     setEditingEvent(null)
+  }
+
+  const handleToggleEventsDrawer = () => {
+    setShowEventsDrawer(!showEventsDrawer)
+  }
+
+  const handleCloseEventsDrawer = () => {
+    setShowEventsDrawer(false)
+  }
+
+  if (isMobile) {
+    return (
+      <div className="flex h-full relative">
+        {/* Main Calendar Panel - takes full width by default */}
+        <div className="flex-1">
+          <CalendarPanel
+            selectedDate={selectedDate}
+            onDateSelect={setSelectedDate}
+            events={mockEvents}
+            isAddEventOpen={isAddEventOpen}
+            onCloseAddEvent={handleCloseAddEvent}
+            onSaveEvent={handleSaveEvent}
+            editingEvent={editingEvent}
+            onOpenAddEvent={handleOpenAddEvent}
+            onEventSelect={handleEventSelect}
+            onAddEvent={handleAddEvent}
+            isMobile={true}
+            showEventsDrawer={showEventsDrawer}
+            onToggleEventsDrawer={handleToggleEventsDrawer}
+            onCloseEventsDrawer={handleCloseEventsDrawer}
+          />
+        </div>
+        
+        {/* Events Drawer - overlay when hamburger menu is clicked */}
+        {showEventsDrawer && (
+          <CalendarSidebar
+            events={mockEvents}
+            onEventSelect={handleEventSelect}
+            onAddEvent={handleAddEvent}
+            isMobile={true}
+            onClose={handleCloseEventsDrawer}
+          />
+        )}
+
+        {/* Add/Edit Event Sidebar - overlay when add/edit is triggered */}
+        <CalendarRightSidebar
+          isOpen={isAddEventOpen}
+          onClose={handleCloseAddEvent}
+          onSave={handleSaveEvent}
+          editingEvent={editingEvent}
+          selectedDate={selectedDate}
+          isMobile={true}
+        />
+      </div>
+    )
   }
 
   return (
@@ -183,6 +247,18 @@ const CalendarPage = () => {
         onSaveEvent={handleSaveEvent}
         editingEvent={editingEvent}
         onOpenAddEvent={handleOpenAddEvent}
+        onEventSelect={handleEventSelect}
+        onAddEvent={handleAddEvent}
+      />
+      
+      {/* Desktop Right Sidebar */}
+      <CalendarRightSidebar
+        isOpen={isAddEventOpen}
+        onClose={handleCloseAddEvent}
+        onSave={handleSaveEvent}
+        editingEvent={editingEvent}
+        selectedDate={selectedDate}
+        isMobile={false}
       />
     </div>
   )
