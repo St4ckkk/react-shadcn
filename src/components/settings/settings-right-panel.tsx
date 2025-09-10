@@ -14,10 +14,10 @@ export default function SettingsRightPanel() {
   const location = useLocation()
 
   return (
-    <div className="w-80">
+    <div className="w-60 mt-6">
       <Card>
         <CardContent className="">
-          <nav className="space-y-1">
+          <nav className="">
             {settingsSections.map((section) => {
               const isActive = location.pathname === section.path
               
@@ -26,9 +26,9 @@ export default function SettingsRightPanel() {
                   key={section.id}
                   to={section.path}
                   className={cn(
-                    "flex w-full items-center rounded-sm px-2 py-2 text-sm font-medium transition-colors",
+                    "flex w-full items-center rounded-sm px-4 py-2 text-sm font-medium transition-colors",
                     isActive
-                      ? "bg-muted text-foreground"
+                      ? "bg-muted text-foreground rounded-sm border border-gray-200"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   )}
                 >

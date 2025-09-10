@@ -12,7 +12,10 @@ import UnderConstructionPage from '@/pages/UnderConstructionPage'
 import ServerError from '@/pages/error/ServerError'
 import Forbidden from '@/pages/error/Forbidden'
 import NoAccess from '@/pages/error/NoAccess'
+
 import Profile from '@/pages/settings/Profile'
+import Account from '@/pages/settings/Account'
+import Appearance from '@/pages/settings/Appearance'
 
 const App = () => {
   return (
@@ -32,8 +35,8 @@ const App = () => {
           <Route path="/file-manager" element={<UnderConstructionPage />} />
 
           <Route path="/pages/settings/profile" element={<Profile />} />
-          <Route path="/pages/settings/account" element={<UnderConstructionPage />} />
-          <Route path="/pages/settings/appearance" element={<UnderConstructionPage />} />
+          <Route path="/pages/settings/account" element={<Account />} />
+          <Route path="/pages/settings/appearance" element={<Appearance />} />
           <Route path="/pages/settings/notifications" element={<UnderConstructionPage />} />
           <Route path="/pages/settings/display" element={<UnderConstructionPage />} />
 
