@@ -38,6 +38,7 @@ const App = () => {
           
           <Route path="/file-manager" element={<UnderConstructionPage />} />
 
+          {/* Settings Pages */}
           <Route path="/pages/settings/profile" element={<Profile />} />
           <Route path="/pages/settings/account" element={<Account />} />
           <Route path="/pages/settings/appearance" element={<Appearance />} />
