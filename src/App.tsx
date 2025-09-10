@@ -4,9 +4,12 @@ import PageTitle from "@/components/PageTitle"
 import Home from "@/pages/Home"
 import Inbox from "@/pages/Inbox"
 import CalendarPage from '@/pages/CalendarPage'
+
 import Login from '@/pages/authentication/Login'
 import Register from '@/pages/authentication/Register'
 import ForgotPassword from '@/pages/ForgotPassword'
+
+
 import NotFound from '@/pages/error/NotFound'
 import UnderConstructionPage from '@/pages/UnderConstructionPage'
 import ServerError from '@/pages/error/ServerError'
@@ -16,6 +19,7 @@ import NoAccess from '@/pages/error/NoAccess'
 import Profile from '@/pages/settings/Profile'
 import Account from '@/pages/settings/Account'
 import Appearance from '@/pages/settings/Appearance'
+import Notification from '@/pages/settings/Notification'
 
 const App = () => {
   return (
@@ -37,7 +41,7 @@ const App = () => {
           <Route path="/pages/settings/profile" element={<Profile />} />
           <Route path="/pages/settings/account" element={<Account />} />
           <Route path="/pages/settings/appearance" element={<Appearance />} />
-          <Route path="/pages/settings/notifications" element={<UnderConstructionPage />} />
+          <Route path="/pages/settings/notifications" element={<Notification />} />
           <Route path="/pages/settings/display" element={<UnderConstructionPage />} />
 
           
