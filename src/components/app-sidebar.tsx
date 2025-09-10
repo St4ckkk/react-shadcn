@@ -1,37 +1,13 @@
 import { Link, useLocation } from "react-router-dom"
+import { useState } from "react"
 import { 
-  Calendar, 
-  Home, 
-  Inbox, 
-  Settings, 
-  ChevronRight,
-  Layers,
-  Badge,
-  Navigation,
-  MousePointer,
-  CreditCard,
-  ImageIcon,
-  List,
-  Square,
-  Layout,
-  FileText,
-  CircleDot,
-  Loader2,
-  HelpCircle,
-  Table,
-  ChartBar,
-  ChartArea,
-  ChartBarBig,
-  ChartPie,
-  FolderClosed,
   Palette,
-  Database,
   BarChart3,
   Sparkles,
   AlertTriangle,
-  User
+  User,
+  Settings
 } from "lucide-react"
-import { useState } from "react"
 
 import {
   Sidebar,
@@ -51,234 +27,17 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Badge as UIBadge } from "@/components/ui/badge"
 import { useLoadingState } from "@/hooks/loading-state"
-
-const mainItems = [
-  {
-    title: "Home",
-    url: "/",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "/inbox",
-    icon: Inbox,
-    badge: 19,
-  },
-  {
-    title: "Calendar",
-    url: "/calendar",
-    icon: Calendar,
-  },
-  {
-    title: "File Manager",
-    url: "/file-manager",
-    icon: FolderClosed,
-  },
-]
-
-const pageItems = [
-  {
-    title: "Blank",
-    url: "/blank",
-    icon: ImageIcon,
-  },
-  {
-    title: "Pricing",
-    url: "/pricing",
-    icon: ImageIcon,
-  },
-  {
-    title: "Contact",
-    url: "/contact",
-    icon: ImageIcon,
-  },
-  {
-    title: "Profile",
-    url: "/profile",
-    icon: ImageIcon
-  }
-]
-
-const componentItems = [
-  {
-    title: "Accordion",
-    url: "/pages/components/accordion",
-    icon: Layers,
-  },
-  {
-    title: "Badges",
-    url: "/pages/components/badges",
-    icon: Badge,
-  },
-  {
-    title: "Breadcrumbs",
-    url: "/pages/components/breadcrumbs",
-    icon: Navigation,
-  },
-  {
-    title: "Buttons",
-    url: "/pages/components/buttons",
-    icon: MousePointer,
-  },
-  {
-    title: "Cards",
-    url: "/pages/components/cards",
-    icon: CreditCard,
-  },
-  {
-    title: "Carousel",
-    url: "/pages/components/carousel",
-    icon: ImageIcon,
-  },
-  {
-    title: "List group",
-    url: "/pages/components/list-group",
-    icon: List,
-  },
-  {
-    title: "Modal",
-    url: "/pages/components/modal",
-    icon: Square,
-  },
-  {
-    title: "Tabs",
-    url: "/pages/components/tabs",
-    icon: Layout,
-  },
-  {
-    title: "Pagination",
-    url: "/pages/components/pagination",
-    icon: FileText,
-  },
-  {
-    title: "Progress",
-    url: "/pages/components/progress",
-    icon: CircleDot,
-  },
-  {
-    title: "Spinners",
-    url: "/pages/components/spinners",
-    icon: Loader2,
-  },
-  {
-    title: "Tooltips",
-    url: "/pages/components/tooltips",
-    icon: HelpCircle,
-  },
-]
-
-const tablesComponents = [
-  {
-    title: "General Tables",
-    url: "/pages/tables/general",
-    icon: Table,
-  },
-  {
-    title: "Data Tables",
-    url: "/pages/tables/data",
-    icon: Table,
-  },
-]
-
-const chartsComponents = [
-  {
-    title: "Chart.js",
-    url: "/pages/charts/chartjs",
-    icon: ChartBar
-  },
-  {
-    title: "Recharts",
-    url: "/pages/charts/recharts",
-    icon: ChartArea
-  },
-  {
-    title: "ApexCharts",
-    url: "/pages/charts/apexcharts",
-    icon: ChartBarBig
-  },
-  {
-    title: "ECharts",
-    url: "/pages/charts/echarts",
-    icon: ChartPie
-  }
-]
-
-const errorComponents = [
-  {
-    title: "404",
-    url: "/pages/error/404",
-    icon: ImageIcon
-  },
-  {
-    title: "500",
-    url: "/pages/error/500",
-    icon: ImageIcon
-  },
-  {
-    title: "403",
-    url: "/pages/error/403",
-    icon: ImageIcon
-  },
-  {
-    title: "401",
-    url: "/pages/error/401",
-    icon: ImageIcon
-  }
-]
-
-const settingsComponents = [
-  {
-    title: "Profile",
-    url: "/pages/settings/profile",
-    icon: ImageIcon
-  },
-  {
-    title: 'Account',
-    url: "/pages/settings/account",
-    icon: ImageIcon
-  },
-  {
-    title: 'Appearances',
-    url: "/pages/settings/appearance",
-    icon: ImageIcon
-  },
-  {
-    title: 'Notifications',
-    url: "/pages/settings/notifications",
-    icon: ImageIcon
-  },
-]
-
-const authenticationComponents = [
-  {
-    title: "Login",
-    url: "/pages/authentication/login",
-    icon: ImageIcon
-  },
-  {
-    title: "Register",
-    url: "/pages/authentication/register",
-    icon: ImageIcon
-  },
-  {
-    title: "Forgot Password",
-    url: "/pages/authentication/forgot-password",
-    icon: ImageIcon
-  }
-]
-
-const iconComponents = [
-  {
-    title: "Lucide",
-    url: "/pages/icons/lucide",
-    icon: ImageIcon
-  },
-  {
-    title: "Bootstrap Icons",
-    url: "/pages/icons/bootstrap",
-    icon: ImageIcon
-  }
-] 
+import { ChevronRight } from "lucide-react"
+import { 
+  mainItems, 
+  pageItems, 
+  componentItems, 
+  chartsComponents, 
+  errorComponents, 
+  settingsComponents, 
+  authenticationComponents, 
+  iconComponents 
+} from "@/data/navigation-data"
 
 function CollapsibleSection({ 
   section, 
@@ -355,12 +114,6 @@ export function AppSidebar() {
       title: 'UI Components',
       items: componentItems,
       icon: Palette,
-    },
-    {
-      id: 'tables',
-      title: 'Tables', 
-      items: tablesComponents,
-      icon: Database,
     },
     {
       id: 'charts',

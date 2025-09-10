@@ -2,11 +2,14 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import { Link } from "react-router-dom"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 export default function NotFound() {
+  const isMobile = useIsMobile()
+
   return (
-    <div className="flex items-center justify-center p-30">
-      <div className="w-full max-w-xl space-y-8">
+    <div className={`flex items-center justify-center ${isMobile ? 'p-4' : 'p-30'}`}>
+      <div className={`w-full space-y-8 ${isMobile ? 'max-w-sm' : 'max-w-xl'}`}>
         <Card className="bg-gray-50 border border-gray-200 relative overflow-hidden rounded-md">
           <div 
             className="absolute inset-0 opacity-30"
@@ -18,9 +21,9 @@ export default function NotFound() {
               backgroundSize: '20px 20px'
             }}
           />
-          <CardContent className="relative p-12 text-center">
-            <h1 className="text-8xl font-bold text-black mb-4">404</h1>
-            <p className="text-2xl font-medium text-black">Page Not Found</p>
+          <CardContent className={`relative text-center ${isMobile ? 'p-6' : 'p-12'}`}>
+            <h1 className={`font-bold text-black mb-4 ${isMobile ? 'text-6xl' : 'text-8xl'}`}>404</h1>
+            <p className={`font-medium text-black ${isMobile ? 'text-lg' : 'text-2xl'}`}>Page Not Found</p>
           </CardContent>
         </Card>
         

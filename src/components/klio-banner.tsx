@@ -5,11 +5,11 @@ import { Skeleton } from "@/components/ui/skeleton"
 import ImageBanner from "./img-banner"
 import Shuffle from './shuffle'
 import { useLoadingState } from "@/hooks/loading-state"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 const KlioBanner = () => {
+  const isMobile = useIsMobile()
   const isLoading = useLoadingState(200)
-
-
 
   const handleClose = () => {
     console.log('Banner closed')
@@ -22,13 +22,13 @@ const KlioBanner = () => {
   if (isLoading) {
     return (
       <div className="mb-6">
-        <div className="relative h-[550px] overflow-hidden rounded-lg shadow-lg">
+        <div className={`relative overflow-hidden rounded-lg shadow-lg ${isMobile ? 'h-[300px]' : 'h-[550px]'}`}>
           <Skeleton className="h-full w-full" />
           <div className="absolute inset-0 bg-black/20" />
-          <div className="relative z-10 p-6 h-full flex flex-col justify-between">
-            <Skeleton className="h-12 w-64 bg-white/20" />
+          <div className={`relative z-10 h-full flex flex-col justify-between ${isMobile ? 'p-4' : 'p-6'}`}>
+            <Skeleton className={`bg-white/20 ${isMobile ? 'h-8 w-48' : 'h-12 w-64'}`} />
             <div className="flex justify-end">
-              <Skeleton className="h-12 w-32 bg-white/20" />
+              <Skeleton className={`bg-white/20 ${isMobile ? 'h-8 w-24' : 'h-12 w-32'}`} />
             </div>
           </div>
         </div>
@@ -53,16 +53,16 @@ const KlioBanner = () => {
         )}
         action={
           <Button 
-            size="lg" 
+            size={isMobile ? "default" : "lg"}
             variant="secondary"
             className="bg-white/90 hover:bg-white text-black font-semibold pointer-events-none"
           >
-            <ExternalLink className="mr-2 h-4 w-4" />
-            Learn More
+            <ExternalLink className={`${isMobile ? 'mr-1 h-3 w-3' : 'mr-2 h-4 w-4'}`} />
+            {isMobile ? 'Learn' : 'Learn More'}
           </Button>
         }
         title={
-          <h2 className="text-4xl md:text-5xl font-extrabold uppercase leading-tight text-white font-press-start">
+          <h2 className={`font-extrabold uppercase leading-tight text-white font-press-start ${isMobile ? 'text-2xl' : 'text-4xl md:text-5xl'}`}>
             <Shuffle
               tag="span"
               text="Klio Solutions"
@@ -88,6 +88,7 @@ const KlioBanner = () => {
             }}
           />
         }
+        isMobile={ isMobile}
       />
     </div>
   )
