@@ -7,8 +7,8 @@ interface SettingsContainerProps {
 
 export default function SettingsContainer({ children }: SettingsContainerProps) {
   return (
-    <div className="flex gap-6 mt-6">
-      <div className="w-[600px]">
+    <div className="flex gap-6 mt-6 md:px-0">
+      <div className="w-full max-w-[600px]">
         <Card>
           <CardContent className="">
             {children}
