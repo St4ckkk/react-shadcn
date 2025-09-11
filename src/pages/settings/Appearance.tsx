@@ -37,7 +37,7 @@ export default function Appearance() {
                   Set the font you want to use in the dashboard.
                 </p>
               </div>
-
+{/* add custom theme */}
               <div className="space-y-2">
                 <Label>Theme</Label>
                 <p className="text-sm text-muted-foreground mb-3">

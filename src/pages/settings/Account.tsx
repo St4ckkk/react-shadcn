@@ -84,6 +84,7 @@ export default function Account() {
                     <SelectItem value="ja">Japanese</SelectItem>
                     <SelectItem value="ko">Korean</SelectItem>
                     <SelectItem value="zh">Chinese</SelectItem>
+                    <SelectItem value="ar">Arabic</SelectItem>
                   </SelectContent>
                 </Select>
                 <p className="text-sm text-muted-foreground">
