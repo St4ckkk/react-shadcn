@@ -126,7 +126,7 @@ export default function Profile() {
         
         {!isMobile && <SettingsRightPanel />}
       </div>
-      
+      {/* add sonner */}
       {isMobile && <SettingsMobileNav />}
     </div>
   )

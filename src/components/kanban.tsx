@@ -1,208 +1,699 @@
-import { useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
+import React, { useState, useEffect } from "react"
+import { CirclePlus, SlidersHorizontal } from "lucide-react"
+import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Separator } from "@/components/ui/separator"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog"
 import { 
   Search, 
-  Share2, 
-  Upload, 
-  Plus, 
-  MoreHorizontal, 
-  MessageCircle, 
-  Eye, 
-  Calendar,
-  GripVertical,
-  Filter,
+  GripVertical, 
+  Paperclip,
+  UserPlus,
+  MessageSquare,
+  Check,
 } from "lucide-react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { DndProvider, useDrag, useDrop } from "react-dnd"
+import { HTML5Backend } from "react-dnd-html5-backend"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 interface Task {
-  id: number
+  id: string
   title: string
   description: string
-  priority: "Critical" | "High" | "Medium" | "Low"
-  status: "In Progress" | "Reviewed" | "Completed"
+  priority: "high" | "medium" | "low"
+  status: "backlog" | "in-progress" | "done" | "todo" | "cancelled" | "for-checking"
   assignees: Array<{
     name: string
-    avatar: string
+    initials: string
+    avatar?: string
   }>
   comments: number
-  views: number
-  dueDate?: string
-  category: string
+  attachments: number
+  progress: number
 }
 
 const initialTasks: Task[] = [
   {
-    id: 1,
-    title: "Website Redesign for Client A",
-    description: "Complete redesign of the company website with modern UI/UX principles and responsive design.",
-    priority: "High",
-    status: "In Progress",
+    id: "ATATAT",
+    title: "Integrate Stripe payment gateway",
+    description: "Compile competitor landing page designs for inspiration. G..",
+    priority: "high",
+    status: "backlog",
     assignees: [
-      { name: "John Doe", avatar: "https://github.com/shadcn.png" },
-      { name: "Jane Smith", avatar: "https://github.com/vercel.png" }
+      { name: "John Doe", initials: "JD" },
+      { name: "Jane Smith", initials: "JS" }
     ],
-    comments: 12,
-    views: 45,
-    dueDate: "2024-02-15",
-    category: "Web Development"
+    comments: 4,
+    attachments: 2,
+    progress: 10
   },
   {
-    id: 2,
-    title: "Mobile App Development",
-    description: "Develop cross-platform mobile application for iOS and Android using React Native.",
-    priority: "Critical",
-    status: "In Progress",
+    id: "MWJL",
+    title: "Set up automated backups",
+    description: "Compile competitor landing page designs for inspiration. G..",
+    priority: "low",
+    status: "backlog",
     assignees: [
-      { name: "Bob Johnson", avatar: "https://github.com/nextjs.png" },
-      { name: "Alice Brown", avatar: "https://github.com/react.png" }
-    ],
-    comments: 8,
-    views: 32,
-    dueDate: "2024-03-01",
-    category: "Mobile Development"
-  },
-  {
-    id: 3,
-    title: "API Integration Project",
-    description: "Integrate third-party APIs and develop custom endpoints for data synchronization.",
-    priority: "Medium",
-    status: "Reviewed",
-    assignees: [
-      { name: "Charlie Wilson", avatar: "https://github.com/shadcn.png" }
-    ],
-    comments: 5,
-    views: 28,
-    dueDate: "2024-02-20",
-    category: "Backend Development"
-  },
-  {
-    id: 4,
-    title: "Database Optimization",
-    description: "Optimize database queries and implement proper indexing for better performance.",
-    priority: "High",
-    status: "In Progress",
-    assignees: [
-      { name: "Diana Lee", avatar: "https://github.com/vercel.png" },
-      { name: "Eva Martinez", avatar: "https://github.com/nextjs.png" }
-    ],
-    comments: 15,
-    views: 67,
-    dueDate: "2024-02-25",
-    category: "DevOps"
-  },
-  {
-    id: 5,
-    title: "UI/UX Design System",
-    description: "Create comprehensive design system and component library for consistent user experience.",
-    priority: "Medium",
-    status: "Completed",
-    assignees: [
-      { name: "Frank Chen", avatar: "https://github.com/react.png" }
+      { name: "Bob Johnson", initials: "BJ" },
+      { name: "Alice Brown", initials: "AB" }
     ],
     comments: 3,
-    views: 89,
-    category: "Design"
+    attachments: 0,
+    progress: 5
   },
   {
-    id: 6,
-    title: "Security Audit",
-    description: "Conduct comprehensive security audit and implement necessary security measures.",
-    priority: "Critical",
-    status: "Reviewed",
+    id: "CWAR",
+    title: "Dark mode toggle implementation",
+    description: "Compile competitor landing page designs for inspiration. G..",
+    priority: "high",
+    status: "in-progress",
     assignees: [
-      { name: "Grace Taylor", avatar: "https://github.com/shadcn.png" },
-      { name: "Henry Davis", avatar: "https://github.com/vercel.png" }
+      { name: "Diana Lee", initials: "DL" },
+      { name: "Eva Martinez", initials: "EM" }
     ],
-    comments: 22,
-    views: 156,
-    dueDate: "2024-02-28",
-    category: "Security"
+    comments: 6,
+    attachments: 2,
+    progress: 40
   },
   {
-    id: 7,
-    title: "Performance Testing",
-    description: "Conduct load testing and optimize application performance for better user experience.",
-    priority: "High",
-    status: "In Progress",
+    id: "LMIN",
+    title: "Database schema refactoring",
+    description: "Compile competitor landing page designs for inspiration. G..",
+    priority: "medium",
+    status: "in-progress",
     assignees: [
-      { name: "Ivan Petrov", avatar: "https://github.com/nextjs.png" }
-    ],
-    comments: 7,
-    views: 34,
-    dueDate: "2024-03-05",
-    category: "Testing"
-  },
-  {
-    id: 8,
-    title: "Documentation Update",
-    description: "Update project documentation and create user guides for new features.",
-    priority: "Low",
-    status: "Completed",
-    assignees: [
-      { name: "Julia Kim", avatar: "https://github.com/vercel.png" }
+      { name: "Frank Chen", initials: "FC" },
+      { name: "Grace Taylor", initials: "GT" }
     ],
     comments: 2,
-    views: 18,
-    category: "Documentation"
+    attachments: 3,
+    progress: 55
+  },
+  {
+    id: "NTEL",
+    title: "Accessibility improvements",
+    description: "Compile competitor landing page designs for inspiration. G..",
+    priority: "low",
+    status: "in-progress",
+    assignees: [
+      { name: "Henry Davis", initials: "HD" }
+    ],
+    comments: 1,
+    attachments: 1,
+    progress: 35
+  },
+  {
+    id: "TODO1",
+    title: "User authentication setup",
+    description: "Implement secure user login and registration system",
+    priority: "high",
+    status: "todo",
+    assignees: [
+      { name: "Sarah Wilson", initials: "SW" }
+    ],
+    comments: 2,
+    attachments: 1,
+    progress: 0
+  },
+  {
+    id: "TODO2",
+    title: "API documentation",
+    description: "Create comprehensive API documentation for developers",
+    priority: "medium",
+    status: "todo",
+    assignees: [
+      { name: "Mike Johnson", initials: "MJ" }
+    ],
+    comments: 1,
+    attachments: 0,
+    progress: 0
+  },
+  {
+    id: "CHECK1",
+    title: "Code review for payment module",
+    description: "Review and test the payment integration code",
+    priority: "high",
+    status: "for-checking",
+    assignees: [
+      { name: "Lisa Davis", initials: "LD" },
+      { name: "Tom Brown", initials: "TB" }
+    ],
+    comments: 5,
+    attachments: 3,
+    progress: 90
+  },
+  {
+    id: "CHECK2",
+    title: "Security audit",
+    description: "Perform security audit on the application",
+    priority: "high",
+    status: "for-checking",
+    assignees: [
+      { name: "Alex Green", initials: "AG" }
+    ],
+    comments: 3,
+    attachments: 2,
+    progress: 85
+  },
+  {
+    id: "DONE1",
+    title: "Database optimization",
+    description: "Optimize database queries for better performance",
+    priority: "medium",
+    status: "done",
+    assignees: [
+      { name: "Emma Wilson", initials: "EW" }
+    ],
+    comments: 4,
+    attachments: 1,
+    progress: 100
+  },
+  {
+    id: "DONE2",
+    title: "Frontend responsive design",
+    description: "Make the frontend fully responsive across all devices",
+    priority: "high",
+    status: "done",
+    assignees: [
+      { name: "David Lee", initials: "DL" }
+    ],
+    comments: 2,
+    attachments: 0,
+    progress: 100
+  },
+  {
+    id: "CANCEL1",
+    title: "Legacy feature removal",
+    description: "Remove outdated legacy features from the system",
+    priority: "low",
+    status: "cancelled",
+    assignees: [
+      { name: "Rachel Kim", initials: "RK" }
+    ],
+    comments: 1,
+    attachments: 0,
+    progress: 0
   }
 ]
 
+
+// TaskCard with React DnD
+const TaskCard = ({ task, isPreview = false }: {
+  task: Task
+  isPreview?: boolean
+}) => {
+  const [{ isDragging: dragState }, drag] = useDrag({
+    type: 'task',
+    item: { id: task.id, status: task.status },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  })
+
+  if (isPreview) {
+    return (
+      <Card className="p-4 bg-blue-50 rounded-sm border-2 border-blue-300 border-dashed transition-all duration-300 ease-in-out shadow-lg">
+        <div className="space-y-4">
+          <div>
+            <h4 className="font-semibold text-lg text-gray-900 mb-2">{task.title}</h4>
+            <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">{task.description}</p>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              {task.assignees.slice(0, 2).map((assignee: any, index: number) => (
+                <Avatar key={index} className="h-7 w-7 border border-white -ml-4 first:ml-0">
+                  <AvatarFallback className="bg-blue-500 text-white text-xs">
+                    {assignee.initials}
+                  </AvatarFallback>
+                </Avatar>
+              ))}
+            </div>
+            <div className="flex items-center space-x-2 border rounded p-1">
+              <div className="relative w-4 h-4">
+                <svg className="w-5 h-5 transform-rotate-90" viewBox="0 0 16 16">
+                  <circle
+                    cx="7"
+                    cy="7"
+                    r="6"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    fill="none"
+                    className="text-gray-300"
+                  />
+                  <circle
+                    cx="7"
+                    cy="7"
+                    r="6"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    fill="none"
+                    strokeDasharray={`${2 * Math.PI * 6}`}
+                    strokeDashoffset={`${2 * Math.PI * 6 * (1 - task.progress / 100)}`}
+                    className={`${
+                      task.progress === 100 ? 'text-green-600' :
+                      task.progress >= 75 ? 'text-blue-600' :
+                      task.progress >= 50 ? 'text-yellow-600' :
+                      task.progress >= 25 ? 'text-orange-600' :
+                      'text-red-600'
+                    }`}
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
+              <span className="text-sm text-gray-600 font-normal">{task.progress}%</span>
+            </div>
+          </div>
+
+          <Separator className="my-2" />
+          
+          <div className="flex items-center justify-between mt-3">
+            <Badge className="text-sm px-2 bg-white text-gray-800 rounded border border-gray-200">
+              {task.priority}
+            </Badge>
+            
+            <div className="flex items-center space-x-3 text-sm text-gray-500">
+              <div className="flex items-center space-x-1">
+                <Paperclip className="h-4 w-4" />
+                <span>{task.attachments}</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <MessageSquare className="h-4 w-4" />
+                <span>{task.comments}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+    )
+  }
+
+  return (
+    <Card 
+      ref={drag as any}
+      className={`p-4 bg-white rounded-sm border-none transition-all duration-300 ease-in-out ${
+        dragState ? 'opacity-0' : 'cursor-grab hover:shadow-lg'
+      }`}
+    >
+      <div className="space-y-4">
+        <div>
+          <h4 className="font-semibold text-md text-gray-900 mb-2">{task.title}</h4>
+          <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">{task.description}</p>
+        </div>
+        
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            {task.assignees.slice(0, 2).map((assignee: any, index: number) => (
+              <Avatar key={index} className="h-7 w-7 border border-white -ml-4 first:ml-0">
+                <AvatarFallback className="bg-blue-500 text-white text-xs">
+                  {assignee.initials}
+                </AvatarFallback>
+              </Avatar>
+            ))}
+          </div>
+          <div className="flex items-center space-x-2 border rounded p-1">
+            <div className="relative w-4 h-4">
+              <svg className="w-5 h-5 transform-rotate-90" viewBox="0 0 16 16">
+                <circle
+                  cx="7"
+                  cy="7"
+                  r="6"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  fill="none"
+                  className="text-gray-300"
+                />
+                <circle
+                  cx="7"
+                  cy="7"
+                  r="6"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  fill="none"
+                  strokeDasharray={`${2 * Math.PI * 6}`}
+                  strokeDashoffset={`${2 * Math.PI * 6 * (1 - task.progress / 100)}`}
+                  className={`${
+                    task.progress === 100 ? 'text-green-600' :
+                    task.progress >= 75 ? 'text-blue-600' :
+                    task.progress >= 50 ? 'text-yellow-600' :
+                    task.progress >= 25 ? 'text-orange-600' :
+                    'text-red-600'
+                  }`}
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+            <span className="text-sm text-gray-600 font-normal">{task.progress}%</span>
+          </div>
+        </div>
+
+        <Separator className="my-2" />
+        
+        <div className="flex items-center justify-between mt-3">
+          <Badge className="text-sm px-2 bg-white text-gray-800 rounded border border-gray-200">
+            {task.priority}
+          </Badge>
+          
+          <div className="flex items-center space-x-3 text-sm text-gray-500">
+            <div className="flex items-center space-x-1">
+              <Paperclip className="h-4 w-4" />
+              <span>{task.attachments}</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <MessageSquare className="h-4 w-4" />
+              <span>{task.comments}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Card>
+  )
+}
+
+// TaskColumn with real-time positioning and preview
+const TaskColumn = ({ status, tasks, onMoveTask, onReorderTask, dragOverIndex, draggedTask, draggedTaskId, previewTasks }: {
+  status: { key: string; label: string; count: number }
+  tasks: Task[]
+  onMoveTask: (taskId: string, newStatus: string, insertIndex?: number) => void
+  onReorderTask: (taskId: string, status: string, insertIndex: number) => void
+  dragOverIndex: number | null
+  draggedTask: Task | null
+  draggedTaskId: string | null
+  previewTasks?: Task[]
+}) => {
+  const [{ isOver }, drop] = useDrop({
+    accept: 'task',
+    drop: (item: any, monitor) => {
+      const clientOffset = monitor.getClientOffset()
+      if (clientOffset) {
+        const rect = document.querySelector(`[data-column="${status.key}"]`)?.getBoundingClientRect()
+        
+        if (rect) {
+          const y = clientOffset.y - rect.top
+          const taskHeight = 200
+          const index = Math.floor(y / taskHeight)
+          const maxIndex = tasks.length
+          const clampedIndex = Math.min(Math.max(index, 0), maxIndex)
+          
+          if (item.status !== status.key) {
+            onMoveTask(item.id, status.key, clampedIndex)
+          } else {
+            onReorderTask(item.id, status.key, clampedIndex)
+          }
+        }
+      }
+    },
+    hover: (item: any, monitor) => {
+      const clientOffset = monitor.getClientOffset()
+      if (clientOffset) {
+        const rect = document.querySelector(`[data-column="${status.key}"]`)?.getBoundingClientRect()
+        
+        if (rect) {
+          // Update drag over index for real-time feedback
+          if (draggedTask && draggedTask.id !== item.id) {
+            // This will be handled by the parent component
+          }
+        }
+      }
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+  })
+
+  // Use preview tasks if available, otherwise use regular tasks
+  const displayTasks = previewTasks || tasks
+
+  return (
+    <div 
+      ref={drop as any}
+      data-column={status.key}
+      className={`bg-gray-50 rounded-lg p-4 transition-all duration-300 ease-in-out ${
+        isOver ? 'bg-blue-50 border-2 border-blue-300 border-dashed' : 'hover:shadow-lg'
+      }`}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center space-x-2">
+          <h3 className="font-semibold text-md text-gray-900">{status.label}</h3>
+          <Badge variant="secondary" className="bg-white border border-gray-200 text-gray-600 text-xs px-2 rounded">
+            {status.count}
+          </Badge>
+        </div>
+        <div className="flex items-center space-x-1">
+          <Button variant="ghost" size="sm" className="h-6 w-6 p-0 cursor-grab hover:bg-gray-200">
+            <GripVertical className="h-4 w-4 text-gray-600" />
+          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-gray-200">
+                <CirclePlus className="h-4 w-4 text-gray-600" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Add Task</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      </div>
+      
+      <div className="space-y-3">
+        {displayTasks.map((task: Task, index: number) => (
+          <React.Fragment key={task.id}>
+            {/* Drop indicator above task */}
+            {dragOverIndex === index && (
+              <div className="h-1 bg-blue-400 rounded-full my-2 transition-all duration-300 ease-in-out"></div>
+            )}
+            
+            {task.id === draggedTaskId ? (
+              <TaskCard 
+                task={task} 
+                isPreview={true}
+              />
+            ) : (
+              <TaskCard 
+                task={task} 
+              />
+            )}
+          </React.Fragment>
+        ))}
+        
+        {/* Drop indicator at the end */}
+        {dragOverIndex === displayTasks.length && (
+          <div className="h-1 bg-blue-400 rounded-full my-2 transition-all duration-300 ease-in-out"></div>
+        )}
+        
+        {(!displayTasks || displayTasks.length === 0) && !draggedTask && (
+          <div className="flex flex-col items-center justify-center h-32 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+            <p className="text-sm text-gray-500 mb-2">No task added here.</p>
+            <Button variant="outline" size="sm" className="h-8">
+              Add Task
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Column swapping with React DnD
+const ColumnContainer = ({ status, onColumnMove, children }: {
+  status: { key: string; label: string; count: number }
+  onColumnMove: (draggedColumnId: string, targetColumnId: string) => void
+  children: React.ReactNode
+}) => {
+  const [{ isDragging }, drag] = useDrag({
+    type: 'column',
+    item: { id: status.key },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  })
+
+  const [{ isOver }, drop] = useDrop({
+    accept: 'column',
+    drop: (item: any) => {
+      if (item.id !== status.key) {
+        onColumnMove(item.id, status.key)
+      }
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+  })
+
+  return (
+    <div
+      ref={(node) => {
+        drag(node)
+        drop(node)
+      }}
+      className={`transition-all duration-300 ease-in-out ${
+        isDragging ? 'opacity-50 scale-105' : ''
+      } ${isOver ? 'ring-2 ring-blue-300' : ''}`}
+    >
+      {children}
+    </div>
+  )
+}
+
+// Main component
 export default function KanbanComponent() {
+  const isMobile = useIsMobile()
   const [tasks, setTasks] = useState<Task[]>(initialTasks)
-  const [draggedTask, setDraggedTask] = useState<Task | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
-  const [sortBy, setSortBy] = useState("Newest")
+  const [columnOrder, setColumnOrder] = useState<string[]>([
+    "backlog", 
+    "todo", 
+    "in-progress", 
+    "for-checking", 
+    "done"
+  ])
+  const [dragOverIndex] = useState<number | null>(null)
+  const [draggedTask] = useState<Task | null>(null)
+  const [draggedTaskId] = useState<string | null>(null)
+  const [previewTasks, setPreviewTasks] = useState<Record<string, Task[]>>({})
+  const [dragPosition, setDragPosition] = useState({ x: 0, y: 0 })
+  const [filters, setFilters] = useState({
+    status: [] as string[],
+    priority: [] as string[],
+    assignees: [] as string[]
+  })
+  const [filterSearch, setFilterSearch] = useState("")
+  const [assignUsersOpen, setAssignUsersOpen] = useState(false)
+  const [assigneeSearch, setAssigneeSearch] = useState("")
+  const [selectedAssignees, setSelectedAssignees] = useState<string[]>([])
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "Critical": return "destructive"
-      case "High": return "default"
-      case "Medium": return "secondary"
-      case "Low": return "outline"
-      default: return "outline"
+  const availableUsers = [
+    { id: "olivia", name: "Olivia Martin", email: "m@example.com", initials: "OM", color: "bg-blue-500" },
+    { id: "isabella", name: "Isabella Nguyen", email: "isabella.nguyen@email.com", initials: "IN", color: "bg-purple-500" },
+    { id: "emma", name: "Emma Wilson", email: "emma@example.com", initials: "EW", color: "bg-purple-500" },
+    { id: "jackson", name: "Jackson Lee", email: "lee@example.com", initials: "JL", color: "bg-orange-500" },
+    { id: "william", name: "William Kim", email: "will@email.com", initials: "WK", color: "bg-blue-500" },
+    { id: "liam", name: "Liam Johnson", email: "liam@example.com", initials: "LJ", color: "bg-green-500" },
+    { id: "sophia", name: "Sophia Davis", email: "sophia@example.com", initials: "SD", color: "bg-pink-500" },
+    { id: "noah", name: "Noah Brown", email: "noah@example.com", initials: "NB", color: "bg-indigo-500" }
+  ]
+
+  const filteredUsers = availableUsers.filter(user =>
+    user.name.toLowerCase().includes(assigneeSearch.toLowerCase()) ||
+    user.email.toLowerCase().includes(assigneeSearch.toLowerCase())
+  )
+
+  const handleAssigneeToggle = (userId: string) => {
+    setSelectedAssignees(prev =>
+      prev.includes(userId)
+        ? prev.filter(id => id !== userId)
+        : [...prev, userId]
+    )
+  }
+
+  const handleAssignUsers = () => {
+    console.log("Assigned users:", selectedAssignees)
+    setAssignUsersOpen(false)
+    setSelectedAssignees([])
+    setAssigneeSearch("")
+  }
+
+  const handleFilterChange = (category: string, value: string, checked: boolean) => {
+    setFilters(prev => ({
+      ...prev,
+      [category]: checked 
+        ? [...prev[category as keyof typeof prev], value]
+        : prev[category as keyof typeof prev].filter(item => item !== value)
+    }))
+  }
+
+  const clearFilters = () => {
+    setFilters({
+      status: [],
+      priority: [],
+      assignees: []
+    })
+  }
+
+  const getActiveFiltersCount = () => {
+    return filters.status.length + filters.priority.length + filters.assignees.length
+  }
+
+  const handleMoveTask = (taskId: string, newStatus: string, insertIndex?: number) => {
+    setTasks(prevTasks => {
+      const filteredTasks = prevTasks.filter(task => task.id !== taskId)
+      const targetColumnTasks = filteredTasks.filter(task => task.status === newStatus)
+      const otherTasks = filteredTasks.filter(task => task.status !== newStatus)
+      
+      const newTask = { ...prevTasks.find(task => task.id === taskId)!, status: newStatus as Task["status"] }
+      const insertAt = insertIndex !== undefined ? insertIndex : targetColumnTasks.length
+      
+      const updatedTargetColumn = [
+        ...targetColumnTasks.slice(0, insertAt),
+        newTask,
+        ...targetColumnTasks.slice(insertAt)
+      ]
+      
+      return [...otherTasks, ...updatedTargetColumn]
+    })
+  }
+
+  const handleReorderTask = (taskId: string, status: string, insertIndex: number) => {
+    setTasks(prevTasks => {
+      const filteredTasks = prevTasks.filter(task => task.id !== taskId)
+      const targetColumnTasks = filteredTasks.filter(task => task.status === status)
+      const otherTasks = filteredTasks.filter(task => task.status !== status)
+      
+      const newTask = { ...prevTasks.find(task => task.id === taskId)!, status: status as Task["status"] }
+      
+      const updatedTargetColumn = [
+        ...targetColumnTasks.slice(0, insertIndex),
+        newTask,
+        ...targetColumnTasks.slice(insertIndex)
+      ]
+      
+      return [...otherTasks, ...updatedTargetColumn]
+    })
+  }
+
+  const handleColumnMove = (draggedColumnId: string, targetColumnId: string) => {
+    const newOrder = [...columnOrder]
+    const draggedIndex = newOrder.indexOf(draggedColumnId)
+    const targetIndex = newOrder.indexOf(targetColumnId)
+    
+    if (draggedIndex !== -1 && targetIndex !== -1) {
+      newOrder.splice(draggedIndex, 1)
+      newOrder.splice(targetIndex, 0, draggedColumnId)
+      setColumnOrder(newOrder)
     }
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "In Progress": return "bg-purple-50 border-purple-200"
-      case "Reviewed": return "bg-orange-50 border-orange-200"
-      case "Completed": return "bg-green-50 border-green-200"
-      default: return "bg-gray-50 border-gray-200"
-    }
-  }
 
-  const getStatusHeaderColor = (status: string) => {
-    switch (status) {
-      case "In Progress": return "bg-purple-500"
-      case "Reviewed": return "bg-orange-500"
-      case "Completed": return "bg-green-500"
-      default: return "bg-gray-500"
-    }
+
+  // Create preview tasks for real-time feedback
+  const createPreviewTasks = () => {
+    if (!draggedTask) return {}
+
+    const filteredTasks = tasks.filter(task => task.id !== draggedTask.id)
+    const preview: Record<string, Task[]> = {}
+
+    // Create preview for each column
+    const statuses = ["backlog", "todo", "in-progress", "for-checking", "done"]
+    
+    statuses.forEach(status => {
+      const columnTasks = filteredTasks.filter(task => task.status === status)
+      preview[status] = columnTasks
+    })
+
+    return preview
   }
 
   const filteredTasks = tasks.filter(task =>
     task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    task.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    task.category.toLowerCase().includes(searchTerm.toLowerCase())
+    task.description.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   const groupedTasks = filteredTasks.reduce((acc, task) => {
@@ -213,413 +704,756 @@ export default function KanbanComponent() {
     return acc
   }, {} as Record<string, Task[]>)
 
-  const statuses: Task["status"][] = ["In Progress", "Reviewed", "Completed"]
+  const statuses = [
+    { key: "backlog", label: "Backlog", count: groupedTasks.backlog?.length || 0 },
+    { key: "todo", label: "To-Do", count: groupedTasks.todo?.length || 0 },
+    { key: "in-progress", label: "In Progress", count: groupedTasks["in-progress"]?.length || 0 },
+    { key: "for-checking", label: "For Checking", count: groupedTasks["for-checking"]?.length || 0 },
+    { key: "done", label: "Done", count: groupedTasks.done?.length || 0 }
+  ]
 
-  const handleDragStart = (e: React.DragEvent, task: Task) => {
-    setDraggedTask(task)
-    e.dataTransfer.effectAllowed = "move"
-    e.dataTransfer.setData("text/plain", task.id.toString())
-  }
+  const orderedStatuses = columnOrder.map(key => 
+    statuses.find(status => status.key === key)
+  ).filter(Boolean) as typeof statuses
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.dataTransfer.dropEffect = "move"
-  }
-
-  const handleDrop = (e: React.DragEvent, newStatus: Task["status"]) => {
-    e.preventDefault()
-    
-    if (draggedTask && draggedTask.status !== newStatus) {
-      setTasks(prevTasks => 
-        prevTasks.map(task => 
-          task.id === draggedTask.id 
-            ? { ...task, status: newStatus }
-            : task
-        )
-      )
+  // Update preview tasks when drag state changes
+  useEffect(() => {
+    if (draggedTask) {
+      const preview = createPreviewTasks()
+      setPreviewTasks(preview)
     }
-    
-    setDraggedTask(null)
-  }
+  }, [draggedTask])
 
-  const handleDragEnd = () => {
-    setDraggedTask(null)
-  }
 
-  const addNewTask = (status: Task["status"]) => {
-    const newTask: Task = {
-      id: Math.max(...tasks.map(t => t.id)) + 1,
-      title: "New Task",
-      description: "Click to edit this task description",
-      priority: "Medium",
-      status,
-      assignees: [],
-      comments: 0,
-      views: 0,
-      category: "General"
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (draggedTask) {
+        setDragPosition({ x: e.clientX, y: e.clientY })
+      }
     }
-    
-    setTasks(prevTasks => [...prevTasks, newTask])
-  }
-
-  const deleteTask = (taskId: number) => {
-    setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId))
-  }
-
-  const duplicateTask = (task: Task) => {
-    const newTask: Task = {
-      ...task,
-      id: Math.max(...tasks.map(t => t.id)) + 1,
-      title: `${task.title} (Copy)`,
-      status: task.status
+    if (draggedTask) {
+      document.addEventListener('mousemove', handleMouseMove)
+      return () => document.removeEventListener('mousemove', handleMouseMove)
     }
-    setTasks(prevTasks => [...prevTasks, newTask])
-  }
-
-  const totalTasks = tasks.length
-  const completedTasks = tasks.filter(task => task.status === "Completed").length
-//   const inProgressTasks = tasks.filter(task => task.status === "In Progress").length
-//   const reviewedTasks = tasks.filter(task => task.status === "Reviewed").length
+  }, [draggedTask])
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-3">
-            <img src="/klio-logo.svg" alt="Klio Solutions" className="h-8 w-8" />
-            <h1 className="text-3xl font-bold text-black">Kanban Dashboard</h1>
+    <DndProvider backend={HTML5Backend}>
+      <div className="bg-white">
+        <div className={`${isMobile ? '' : 'max-w-[1230px] mx-auto'}`}>
+          <div className="mb-8">  
+            {isMobile ? (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h1 className="text-2xl font-bold text-gray-900">Project 01</h1>
+                  <div className="flex items-center space-x-2">
+                    <div className="flex items-center">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback className="bg-blue-600 text-white text-sm">TB</AvatarFallback>
+                      </Avatar>
+                      <Avatar className="h-8 w-8 -ml-2">
+                        <AvatarFallback className="bg-gray-600 text-white text-sm">JD</AvatarFallback>
+                      </Avatar>
+                      <Avatar className="h-8 w-8 -ml-2">
+                        <AvatarFallback className="bg-orange-500 text-white text-sm">JS</AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <div className="flex items-center ">
+                      <span className="text-sm text-gray-500">+5</span>
+                      <Dialog open={assignUsersOpen} onOpenChange={setAssignUsersOpen}>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm" className="h-9 w-9 p-0 rounded-sm border-gray-300">
+                            <UserPlus className="h-4 w-4" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md p-0">
+                          <DialogHeader className="sr-only">
+                            <DialogTitle>Assign Users</DialogTitle>
+                            <DialogDescription>Select users to assign to this task</DialogDescription>
+                          </DialogHeader>
+                          <div className="p-4 pb-0">
+                            <h2 className="text-lg font-semibold text-gray-900">Assign Users</h2>
+                          </div>
+                          
+                          <div className="">
+                            <div className="relative">
+                              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                              <Input
+                                placeholder="Search user..."
+                                value={assigneeSearch}
+                                onChange={(e) => setAssigneeSearch(e.target.value)}
+                                className="pl-10 w-full border border-gray-200 rounded-none"
+                              />
+                            </div>
+                          </div>
+                          
+                          <ScrollArea className="h-64">
+                            <div>
+                              {filteredUsers.map((user) => (
+                                <div
+                                  key={user.id}
+                                  className={`flex items-center space-x-3 px-4 py-3 cursor-pointer hover:bg-gray-50 ${
+                                    selectedAssignees.includes(user.id) ? 'bg-amber-50' : ''
+                                  }`}
+                                  onClick={() => handleAssigneeToggle(user.id)}
+                                >
+                                  <Avatar className="h-8 w-8">
+                                    <AvatarFallback className={`${user.color} text-white text-xs`}>
+                                      {user.initials}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-gray-900">
+                                      {user.name}
+                                    </p>
+                                    <p className="text-xs text-gray-500">
+                                      {user.email}
+                                    </p>
+                                  </div>
+                                  {selectedAssignees.includes(user.id) && (
+                                    <Check className="h-5 w-5 text-blue-600" />
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </ScrollArea>
+                          
+                          <div className="border-t p-4 flex items-center justify-between">
+                            {selectedAssignees.length > 0 ? (
+                              <div className="flex items-center">
+                                {selectedAssignees.map((userId, index) => {
+                                  const user = availableUsers.find(u => u.id === userId)
+                                  return user ? (
+                                    <Avatar key={userId} className={`h-8 w-8 border-2 border-white ${index > 0 ? '-ml-2' : ''}`}>
+                                      <AvatarFallback className={`${user.color} text-white text-xs`}>
+                                        {user.initials}
+                                      </AvatarFallback>
+                                    </Avatar>
+                                  ) : null
+                                })}
+                              </div>
+                            ) : (
+                              <p className="text-sm text-gray-500">Select the users to add to this role.</p>
+                            )}
+                            <Button 
+                              onClick={handleAssignUsers} 
+                              className={`${selectedAssignees.length > 0 ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-300 cursor-not-allowed'} text-white`}
+                              disabled={selectedAssignees.length === 0}
+                            >
+                              Assign
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <Tabs defaultValue="board" className="w-auto">
+                    <TabsList className="grid w-auto grid-cols-3 bg-gray-100 h-9 rounded-sm">
+                      <TabsTrigger value="board" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm px-4 py-1 text-sm">Board</TabsTrigger>
+                      <TabsTrigger value="list" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm px-4 py-1 text-sm">List</TabsTrigger>
+                      <TabsTrigger value="table" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm px-4 py-1 text-sm">Table</TabsTrigger>
+                    </TabsList>
+                  </Tabs>
+                  
+                  <div className="flex items-center space-x-2">
+                    <Button variant="outline" size="sm" className="h-9 w-9 p-0 rounded-sm border-gray-300">
+                      <Search className="h-4 w-4" />
+                    </Button>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" size="sm" className="h-9 w-9 p-0 rounded-sm border-gray-300">
+                          <SlidersHorizontal className="h-4 w-4" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-80 p-0" align="end">
+                        <div className="p-4">
+                          <div className="relative mb-4">
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                            <Input
+                              placeholder="Search filters..."
+                              value={filterSearch}
+                              onChange={(e) => setFilterSearch(e.target.value)}
+                              className="pl-10 bg-gray-50 border-gray-200"
+                            />
+                          </div>
+                          
+                          <ScrollArea className="h-64">
+                            <div className="space-y-1 pr-4">
+                              <div>
+                                <h4 className="font-medium text-sm text-gray-900 mb-2">Status</h4>
+                                <div className="space-y-1 ml-2">
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.status.includes('completed') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('status', 'completed', !filters.status.includes('completed'))}
+                                  >
+                                    Completed
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.status.includes('in-progress') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('status', 'in-progress', !filters.status.includes('in-progress'))}
+                                  >
+                                    In Progress
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.status.includes('not-started') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('status', 'not-started', !filters.status.includes('not-started'))}
+                                  >
+                                    Not Started
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <Separator />
+                              
+                              <div>
+                                <h4 className="font-medium text-sm text-gray-900 mb-2">Priority</h4>
+                                <div className="space-y-1 ml-2">
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.priority.includes('high') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('priority', 'high', !filters.priority.includes('high'))}
+                                  >
+                                    High
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.priority.includes('medium') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('priority', 'medium', !filters.priority.includes('medium'))}
+                                  >
+                                    Medium
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.priority.includes('low') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('priority', 'low', !filters.priority.includes('low'))}
+                                  >
+                                    Low
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <Separator />
+                              
+                              <div>
+                                <h4 className="font-medium text-sm text-gray-900 mb-2">Assigned To</h4>
+                                <div className="space-y-1 ml-2">
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.assignees.includes('liam') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('assignees', 'liam', !filters.assignees.includes('liam'))}
+                                  >
+                                    Liam
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.assignees.includes('isabella') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('assignees', 'isabella', !filters.assignees.includes('isabella'))}
+                                  >
+                                    Isabella
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.assignees.includes('noah') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('assignees', 'noah', !filters.assignees.includes('noah'))}
+                                  >
+                                    Noah
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.assignees.includes('ella') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('assignees', 'ella', !filters.assignees.includes('ella'))}
+                                  >
+                                    Ella
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.assignees.includes('ethan') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('assignees', 'ethan', !filters.assignees.includes('ethan'))}
+                                  >
+                                    Ethan
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.assignees.includes('grace') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('assignees', 'grace', !filters.assignees.includes('grace'))}
+                                  >
+                                    Grace
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.assignees.includes('harper') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('assignees', 'harper', !filters.assignees.includes('harper'))}
+                                  >
+                                    Harper
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.assignees.includes('benjamin') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('assignees', 'benjamin', !filters.assignees.includes('benjamin'))}
+                                  >
+                                    Benjamin
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </ScrollArea>
+                          
+                          <Separator className="my-4" />
+                          
+                          <Button 
+                            variant="outline" 
+                            className="w-full bg-gray-50 hover:bg-gray-100"
+                            onClick={clearFilters}
+                          >
+                            Clear Filters
+                          </Button>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                    <Button size="sm" className="h-9 w-9 p-0 rounded-sm bg-blue-600 hover:bg-blue-700">
+                      <CirclePlus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-start justify-between">
+                <div>
+                  <h1 className="text-4xl font-bold text-gray-900 mb-4">Project 01</h1>
+                  <Tabs defaultValue="board" className="w-auto">
+                    <TabsList className="grid w-auto grid-cols-3 bg-gray-100 h-9 rounded-sm">
+                      <TabsTrigger value="board" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm px-4 py-1 text-sm">Board</TabsTrigger>
+                      <TabsTrigger value="list" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm px-4 py-1 text-sm">List</TabsTrigger>
+                      <TabsTrigger value="table" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm px-4 py-1 text-sm">Table</TabsTrigger>
+                    </TabsList>
+                  </Tabs>
+                </div>
+
+                <div className="flex flex-col space-y-4">
+                  <div className="flex items-center justify-end space-x-3">
+                    <div className="flex items-center">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback className="bg-blue-600 text-white text-sm">TB</AvatarFallback>
+                      </Avatar>
+                      <Avatar className="h-8 w-8 -ml-2">
+                        <AvatarFallback className="bg-gray-600 text-white text-sm">JD</AvatarFallback>
+                      </Avatar>
+                      <Avatar className="h-8 w-8 -ml-2">
+                        <AvatarFallback className="bg-orange-500 text-white text-sm">JS</AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-gray-500">+5</span>
+                      <Dialog open={assignUsersOpen} onOpenChange={setAssignUsersOpen}>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm" className="h-9 px-3 rounded-sm text-sm border-gray-300">
+                            <UserPlus className="h-4 w-4" />
+                            Add Assignee
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md p-0">
+                          <DialogHeader className="sr-only">
+                            <DialogTitle>Assign Users</DialogTitle>
+                            <DialogDescription>Select users to assign to this task</DialogDescription>
+                          </DialogHeader>
+                          <div className="p-4 pb-0">
+                            <h2 className="text-lg font-semibold text-gray-900">Assign Users</h2>
+                          </div>
+                          
+                          <div className="">
+                            <div className="relative">
+                              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                              <Input
+                                placeholder="Search user..."
+                                value={assigneeSearch}
+                                onChange={(e) => setAssigneeSearch(e.target.value)}
+                                className="pl-10 w-full sm:w-80 md:w-96 lg:w-full border border-gray-200 rounded-none"
+                              />
+                            </div>
+                          </div>
+                          
+                          <ScrollArea className="h-64">
+                            <div>
+                              {filteredUsers.map((user) => (
+                                <div
+                                  key={user.id}
+                                  className={`flex items-center space-x-3 px-4 py-3 cursor-pointer hover:bg-gray-50 ${
+                                    selectedAssignees.includes(user.id) ? 'bg-amber-50' : ''
+                                  }`}
+                                  onClick={() => handleAssigneeToggle(user.id)}
+                                >
+                                  <Avatar className="h-8 w-8">
+                                    <AvatarFallback className={`${user.color} text-white text-xs`}>
+                                      {user.initials}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-gray-900">
+                                      {user.name}
+                                    </p>
+                                    <p className="text-xs text-gray-500">
+                                      {user.email}
+                                    </p>
+                                  </div>
+                                  {selectedAssignees.includes(user.id) && (
+                                    <Check className="h-5 w-5 text-blue-600" />
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </ScrollArea>
+                          
+                          <div className="border-t p-4 flex items-center justify-between">
+                            {selectedAssignees.length > 0 ? (
+                              <div className="flex items-center">
+                                {selectedAssignees.map((userId, index) => {
+                                  const user = availableUsers.find(u => u.id === userId)
+                                  return user ? (
+                                    <Avatar key={userId} className={`h-8 w-8 border-2 border-white ${index > 0 ? '-ml-2' : ''}`}>
+                                      <AvatarFallback className={`${user.color} text-white text-xs`}>
+                                        {user.initials}
+                                      </AvatarFallback>
+                                    </Avatar>
+                                  ) : null
+                                })}
+                              </div>
+                            ) : (
+                              <p className="text-sm text-gray-500">Select the users to add to this role.</p>
+                            )}
+                            <Button 
+                              onClick={handleAssignUsers} 
+                              className={`${selectedAssignees.length > 0 ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-300 cursor-not-allowed'} text-white`}
+                              disabled={selectedAssignees.length === 0}
+                            >
+                              Assign
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-end space-x-3">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                      <Input
+                        placeholder="Search tasks..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 w-64 h-8 border-gray-300"
+                      />
+                    </div>
+                    
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" size="sm" className="h-9 px-3 rounded-sm text-sm border-gray-300">
+                          <SlidersHorizontal className="h-4 w-4" />
+                          Filters ({getActiveFiltersCount()})
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-80 p-0" align="end">
+                        <div className="p-4">
+                          <div className="relative mb-4">
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                            <Input
+                              placeholder="Search filters..."
+                              value={filterSearch}
+                              onChange={(e) => setFilterSearch(e.target.value)}
+                              className="pl-10 bg-gray-50 border-gray-200"
+                            />
+                          </div>
+                          
+                          <ScrollArea className="h-64">
+                            <div className="space-y-1 pr-4">
+                              <div>
+                                <h4 className="font-medium text-sm text-gray-900 mb-2">Status</h4>
+                                <div className="space-y-1 ml-2">
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.status.includes('completed') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('status', 'completed', !filters.status.includes('completed'))}
+                                  >
+                                    Completed
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.status.includes('in-progress') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('status', 'in-progress', !filters.status.includes('in-progress'))}
+                                  >
+                                    In Progress
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.status.includes('not-started') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('status', 'not-started', !filters.status.includes('not-started'))}
+                                  >
+                                    Not Started
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <Separator />
+                              
+                              <div>
+                                <h4 className="font-medium text-sm text-gray-900 mb-2">Priority</h4>
+                                <div className="space-y-1 ml-2">
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.priority.includes('high') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('priority', 'high', !filters.priority.includes('high'))}
+                                  >
+                                    High
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.priority.includes('medium') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('priority', 'medium', !filters.priority.includes('medium'))}
+                                  >
+                                    Medium
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.priority.includes('low') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('priority', 'low', !filters.priority.includes('low'))}
+                                  >
+                                    Low
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <Separator />
+                              
+                              <div>
+                                <h4 className="font-medium text-sm text-gray-900 mb-2">Assigned To</h4>
+                                <div className="space-y-1 ml-2">
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.assignees.includes('liam') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('assignees', 'liam', !filters.assignees.includes('liam'))}
+                                  >
+                                    Liam
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.assignees.includes('isabella') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('assignees', 'isabella', !filters.assignees.includes('isabella'))}
+                                  >
+                                    Isabella
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.assignees.includes('noah') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('assignees', 'noah', !filters.assignees.includes('noah'))}
+                                  >
+                                    Noah
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.assignees.includes('ella') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('assignees', 'ella', !filters.assignees.includes('ella'))}
+                                  >
+                                    Ella
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.assignees.includes('ethan') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('assignees', 'ethan', !filters.assignees.includes('ethan'))}
+                                  >
+                                    Ethan
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.assignees.includes('grace') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('assignees', 'grace', !filters.assignees.includes('grace'))}
+                                  >
+                                    Grace
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.assignees.includes('harper') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('assignees', 'harper', !filters.assignees.includes('harper'))}
+                                  >
+                                    Harper
+                                  </div>
+                                  <div 
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
+                                      filters.assignees.includes('benjamin') ? 'bg-gray-100' : ''
+                                    }`}
+                                    onClick={() => handleFilterChange('assignees', 'benjamin', !filters.assignees.includes('benjamin'))}
+                                  >
+                                    Benjamin
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </ScrollArea>
+                          
+                          <Separator className="my-4" />
+                          
+                          <Button 
+                            variant="outline" 
+                            className="w-full bg-gray-50 hover:bg-gray-100"
+                            onClick={clearFilters}
+                          >
+                            Clear Filters
+                          </Button>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                    
+                    <Button size="sm" className="h-9 px-3 rounded-sm bg-blue-600 hover:bg-blue-700 text-sm">
+                      <CirclePlus className="h-4 w-4" />
+                      Add Board
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-        
-        <div className="flex items-center space-x-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              placeholder="Search tasks..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 w-64"
-            />
+
+          {/* Blue dragged container that follows mouse */}
+          {draggedTask && (
+            <div 
+              className="fixed z-50 pointer-events-none"
+              style={{
+                left: dragPosition.x - 160,
+                top: dragPosition.y - 100,
+              }}
+            >
+              <Card className="p-4 bg-white rounded-sm border-2 border-blue-400 shadow-2xl opacity-95 transform rotate-2">
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold text-lg text-gray-900 mb-2">{draggedTask.title}</h4>
+                    <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">{draggedTask.description}</p>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      {draggedTask.assignees.slice(0, 2).map((assignee: any, index: number) => (
+                        <Avatar key={index} className="h-7 w-7 border border-white -ml-4 first:ml-0">
+                          <AvatarFallback className="bg-blue-500 text-white text-xs">
+                            {assignee.initials}
+                          </AvatarFallback>
+                        </Avatar>
+                      ))}
+                    </div>
+                    <div className="flex items-center space-x-2 border rounded p-1">
+                      <div className="relative w-4 h-4">
+                        <svg className="w-5 h-5 transform-rotate-90" viewBox="0 0 16 16">
+                          <circle
+                            cx="7"
+                            cy="7"
+                            r="6"
+                            stroke="currentColor"
+                            strokeWidth="1"
+                            fill="none"
+                            className="text-gray-300"
+                          />
+                          <circle
+                            cx="7"
+                            cy="7"
+                            r="6"
+                            stroke="currentColor"
+                            strokeWidth="1"
+                            fill="none"
+                            strokeDasharray={`${2 * Math.PI * 6}`}
+                            strokeDashoffset={`${2 * Math.PI * 6 * (1 - draggedTask.progress / 100)}`}
+                            className={`${
+                              draggedTask.progress === 100 ? 'text-green-600' :
+                              draggedTask.progress >= 75 ? 'text-blue-600' :
+                              draggedTask.progress >= 50 ? 'text-yellow-600' :
+                              draggedTask.progress >= 25 ? 'text-orange-600' :
+                              'text-red-600'
+                            }`}
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      </div>
+                      <span className="text-sm text-gray-600 font-normal">{draggedTask.progress}%</span>
+                    </div>
+                  </div>
+
+                  <Separator className="my-2" />
+                  
+                  <div className="flex items-center justify-between mt-3">
+                    <Badge className="text-sm px-2 bg-white text-gray-800 rounded border border-gray-200">
+                      {draggedTask.priority}
+                    </Badge>
+                    
+                    <div className="flex items-center space-x-3 text-sm text-gray-500">
+                      <div className="flex items-center space-x-1">
+                        <Paperclip className="h-4 w-4" />
+                        <span>{draggedTask.attachments}</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <MessageSquare className="h-4 w-4" />
+                        <span>{draggedTask.comments}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          )}
+
+          <div className="w-full overflow-x-auto">
+            <div className="flex space-x-4 pb-4" style={{ width: 'max-content' }}>
+              {orderedStatuses.map((status) => (
+                <div key={status.key} className={`${isMobile ? 'w-72' : 'w-80'} flex-shrink-0`}>
+                  <ColumnContainer
+                    status={status}
+                    onColumnMove={handleColumnMove}
+                  >
+                    <TaskColumn
+                      status={status}
+                      tasks={groupedTasks[status.key] || []}
+                      onMoveTask={handleMoveTask}
+                      onReorderTask={handleReorderTask}
+                      dragOverIndex={dragOverIndex}
+                      draggedTask={draggedTask}
+                      draggedTaskId={draggedTaskId}
+                      previewTasks={previewTasks[status.key]}
+                    />
+                  </ColumnContainer>
+                </div>
+              ))}
+            </div>
           </div>
-          
-          <Button variant="outline" size="sm">
-            <Share2 className="h-4 w-4 mr-2" />
-            Share
-          </Button>
-          
-          <Button variant="outline" size="sm">
-            <Upload className="h-4 w-4 mr-2" />
-            Upload
-          </Button>
-          
-          <Button size="sm">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Task
-          </Button>
         </div>
       </div>
-
-      {/* Navigation Tabs */}
-      <Tabs defaultValue="By Total Tasks" className="w-full">
-        <div className="flex items-center justify-between">
-          <TabsList className="grid w-auto grid-cols-5">
-            <TabsTrigger value="By Status">By Status</TabsTrigger>
-            <TabsTrigger value="By Total Tasks" className="flex items-center space-x-2">
-              By Total Tasks
-              <Badge variant="secondary" className="ml-2">{totalTasks}</Badge>
-            </TabsTrigger>
-            <TabsTrigger value="Tasks Due">Tasks Due</TabsTrigger>
-            <TabsTrigger value="Extra Tasks">Extra Tasks</TabsTrigger>
-            <TabsTrigger value="Tasks Completed" className="flex items-center space-x-2">
-              Tasks Completed
-              <Badge variant="secondary" className="ml-2">{completedTasks}</Badge>
-            </TabsTrigger>
-          </TabsList>
-          
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm">
-              <Filter className="h-4 w-4 mr-2" />
-              Filter
-            </Button>
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-32">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Newest">Newest</SelectItem>
-                <SelectItem value="Oldest">Oldest</SelectItem>
-                <SelectItem value="Priority">Priority</SelectItem>
-                <SelectItem value="Due Date">Due Date</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <TabsContent value="By Status" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {statuses.map((status) => (
-              <div key={status} className="space-y-4">
-                <div className={`${getStatusColor(status)} rounded-lg border-2 p-4`}>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-3 h-3 rounded-full ${getStatusHeaderColor(status)}`}></div>
-                      <h3 className="font-semibold text-lg text-black">{status}</h3>
-                      <Badge variant="secondary" className="bg-white">
-                        {groupedTasks[status]?.length || 0}
-                      </Badge>
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => addNewTask(status)}
-                      className="h-8 w-8 p-0 hover:bg-white/50"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                
-                <ScrollArea className="h-[600px]">
-                  <div 
-                    className="space-y-2 p-2 rounded-lg border-2 border-dashed border-transparent hover:border-gray-300 transition-colors"
-                    onDragOver={handleDragOver}
-                    onDrop={(e) => handleDrop(e, status)}
-                  >
-                    {groupedTasks[status]?.map((task) => (
-                      <Card 
-                        key={task.id} 
-                        className={`cursor-move hover:shadow-lg transition-all duration-200 border-2 ${
-                          draggedTask?.id === task.id ? 'opacity-50 rotate-1 scale-105' : 'hover:scale-105'
-                        }`}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, task)}
-                        onDragEnd={handleDragEnd}
-                      >
-                        <CardContent className="p-2">
-                          <div className="flex items-start justify-between mb-1">
-                            <div className="flex items-center space-x-1">
-                              <GripVertical className="h-3 w-3 text-gray-400" />
-                              <Badge variant={getPriorityColor(task.priority)} className="text-xs px-1 py-0">
-                                {task.priority}
-                              </Badge>
-                            </div>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm" className="h-4 w-4 p-0">
-                                  <MoreHorizontal className="h-3 w-3" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => duplicateTask(task)}>Duplicate</DropdownMenuItem>
-                                <DropdownMenuItem 
-                                  className="text-red-600"
-                                  onClick={() => deleteTask(task.id)}
-                                >
-                                  Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                          
-                          <h4 className="font-semibold text-xs mb-1 text-black line-clamp-2">{task.title}</h4>
-                          <p className="text-xs text-gray-600 mb-2 line-clamp-2">{task.description}</p>
-                          
-                          <div className="flex items-center space-x-1 mb-2">
-                            {task.assignees.slice(0, 3).map((assignee, index) => (
-                              <Avatar key={index} className="h-4 w-4 -ml-1 first:ml-0 border border-white">
-                                <AvatarImage src={assignee.avatar} />
-                                <AvatarFallback className="text-xs bg-blue-500 text-white">
-                                  {assignee.name[0]}
-                                </AvatarFallback>
-                              </Avatar>
-                            ))}
-                            {task.assignees.length > 3 && (
-                              <div className="h-4 w-4 -ml-1 rounded-full bg-purple-100 flex items-center justify-center border border-white">
-                                <span className="text-xs text-purple-700">+{task.assignees.length - 3}</span>
-                              </div>
-                            )}
-                          </div>
-                          
-                          <div className="flex items-center justify-between text-xs text-gray-500">
-                            <div className="flex items-center space-x-2">
-                              <div className="flex items-center space-x-1">
-                                <MessageCircle className="h-3 w-3" />
-                                <span>{task.comments}</span>
-                              </div>
-                              <div className="flex items-center space-x-1">
-                                <Eye className="h-3 w-3" />
-                                <span>{task.views}</span>
-                              </div>
-                            </div>
-                            {task.dueDate && (
-                              <div className="flex items-center space-x-1">
-                                <Calendar className="h-3 w-3" />
-                                <span>{task.dueDate}</span>
-                              </div>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                    
-                    {(!groupedTasks[status] || groupedTasks[status].length === 0) && (
-                      <div className="flex items-center justify-center h-32 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
-                        <div className="text-center">
-                          <p className="text-sm text-gray-500 mb-1">No tasks in this column</p>
-                          <p className="text-xs text-gray-400">Drop tasks here or add new ones</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </ScrollArea>
-              </div>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="By Total Tasks" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {statuses.map((status) => (
-              <div key={status} className="space-y-4">
-                <div className={`${getStatusColor(status)} rounded-lg border-2 p-4`}>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-3 h-3 rounded-full ${getStatusHeaderColor(status)}`}></div>
-                      <h3 className="font-semibold text-lg text-black">{status}</h3>
-                      <Badge variant="secondary" className="bg-white">
-                        {groupedTasks[status]?.length || 0}
-                      </Badge>
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => addNewTask(status)}
-                      className="h-8 w-8 p-0 hover:bg-white/50"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                
-                <ScrollArea className="h-[600px]">
-                  <div 
-                    className="space-y-2 p-2 rounded-sm border-2 border-dashed border-transparent hover:border-gray-300 transition-colors"
-                    onDragOver={handleDragOver}
-                    onDrop={(e) => handleDrop(e, status)}
-                  >
-                    {groupedTasks[status]?.map((task) => (
-                      <Card 
-                        key={task.id} 
-                        className={`cursor-move rounded-sm hover:shadow-lg transition-all duration-200 border-2 ${
-                          draggedTask?.id === task.id ? 'opacity-50 rotate-1 scale-105' : 'hover:scale-105'
-                        }`}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, task)}
-                        onDragEnd={handleDragEnd}
-                      >
-                        <CardContent className="">
-                          <div className="flex items-start justify-between mb-2">
-                            <div className="flex items-center space-x-1">
-                              <GripVertical className="h-3 w-3 text-gray-400" />
-                              <Badge variant={getPriorityColor(task.priority)} className="text-xs px-1 py-0">
-                                {task.priority}
-                              </Badge>
-                            </div>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm" className="h-4 w-4 p-0">
-                                  <MoreHorizontal className="h-3 w-3" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => duplicateTask(task)}>Duplicate</DropdownMenuItem>
-                                <DropdownMenuItem 
-                                  className="text-red-600"
-                                  onClick={() => deleteTask(task.id)}
-                                >
-                                  Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                          
-                          <h4 className="font-semibold text-xs mb-1 text-black line-clamp-2">{task.title}</h4>
-                          <p className="text-xs text-gray-600 mb-2 line-clamp-2">{task.description}</p>
-                          
-                          <div className="flex items-center space-x-1 mb-2">
-                            {task.assignees.slice(0, 3).map((assignee, index) => (
-                              <Avatar key={index} className="h-5 w-5 -ml-3 first:ml-0 border border-white">
-                                <AvatarImage src={assignee.avatar} />
-                                <AvatarFallback className="text-xs bg-blue-500 text-white">
-                                  {assignee.name[0]}
-                                </AvatarFallback>
-                              </Avatar>
-                            ))}
-                            {task.assignees.length > 3 && (
-                              <div className="h-4 w-4 -ml-1 rounded-full bg-purple-100 flex items-center justify-center border border-white">
-                                <span className="text-xs text-purple-700">+{task.assignees.length - 3}</span>
-                              </div>
-                            )}
-                          </div>
-                          
-                          <div className="flex items-center justify-between text-xs text-gray-500">
-                            <div className="flex items-center space-x-2">
-                              <div className="flex items-center space-x-1">
-                                <MessageCircle className="h-3 w-3" />
-                                <span>{task.comments}</span>
-                              </div>
-                              <div className="flex items-center space-x-1">
-                                <Eye className="h-3 w-3" />
-                                <span>{task.views}</span>
-                              </div>
-                            </div>
-                            {task.dueDate && (
-                              <div className="flex items-center space-x-1">
-                                <Calendar className="h-3 w-3" />
-                                <span>{task.dueDate}</span>
-                              </div>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                    
-                    {(!groupedTasks[status] || groupedTasks[status].length === 0) && (
-                      <div className="flex items-center justify-center h-32 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
-                        <div className="text-center">
-                          <p className="text-sm text-gray-500 mb-1">No tasks in this column</p>
-                          <p className="text-xs text-gray-400">Drop tasks here or add new ones</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </ScrollArea>
-              </div>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="Tasks Due" className="mt-6">
-          <div className="text-center py-12">
-            <p className="text-gray-500">Tasks Due content will be implemented here</p>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="Extra Tasks" className="mt-6">
-          <div className="text-center py-12">
-            <p className="text-gray-500">Extra Tasks content will be implemented here</p>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="Tasks Completed" className="mt-6">
-          <div className="text-center py-12">
-            <p className="text-gray-500">Tasks Completed content will be implemented here</p>
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
+    </DndProvider>
   )
 }
