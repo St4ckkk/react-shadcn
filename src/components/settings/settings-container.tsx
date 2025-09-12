@@ -10,7 +10,7 @@ export default function SettingsContainer({ children }: SettingsContainerProps) 
     <div className="flex gap-6 mt-6 md:px-0">
       <div className="w-full max-w-[600px]">
         <Card>
-          <CardContent className="">
+          <CardContent className="  ">
             {children}
           </CardContent>
         </Card>

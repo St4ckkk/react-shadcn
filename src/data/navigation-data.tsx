@@ -1,7 +1,7 @@
-import { 
-  Home, 
-  Inbox, 
-  Calendar, 
+import {
+  Home,
+  Inbox,
+  Calendar,
   Layers,
   Badge,
   Navigation,
@@ -22,15 +22,16 @@ import {
   ChartPie,
   FolderClosed,
   Kanban,
-//   Palette,
-//   Database,
+  //   Palette,
+  //   Database,
   BarChart3,
-//   Sparkles,
-//   AlertTriangle,
-//   User
+  StickyNote,
+  //   Sparkles,
+  //   AlertTriangle,
+  //   User
 } from "lucide-react"
 
-// Define the type for navigation items
+
 export interface NavigationItem {
   title: string
   url: string
@@ -64,6 +65,11 @@ export const mainItems: NavigationItem[] = [
     title: "Kanban",
     url: "/kanban",
     icon: Kanban,
+  },
+  {
+    title: "Notes",
+    url: "/notes",
+    icon: StickyNote
   }
 ]
 

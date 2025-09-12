@@ -25,6 +25,7 @@ import Notification from '@/pages/settings/Notification'
 import Table from '@/pages/ui-components/Table'
 
 import Kanban from './pages/Kanban'
+import Notes from './pages/Notes'
 
 const App = () => {
   return (
@@ -37,13 +38,14 @@ const App = () => {
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/kanban" element={<Kanban />} />
           <Route path="/file-manager" element={<FileManager />} />
+          <Route path="/notes" element={<Notes />} />
 
           {/* Authentication Pages */}
           <Route path="/pages/authentication/login" element={<Login />} />
           <Route path="/pages/authentication/register" element={<Register />} />
           <Route path="/pages/authentication/forgot-password" element={<ForgotPassword />} />
 
-          <Route path="/file-manager" element={<UnderConstructionPage />} />
+
 
           {/* Settings Pages */}
           <Route path="/pages/settings/profile" element={<Profile />} />
