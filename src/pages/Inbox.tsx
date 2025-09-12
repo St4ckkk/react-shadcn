@@ -36,7 +36,7 @@ const mockChats: Chat[] = [
     isOnline: true
   },
   {
-    id: "2", 
+    id: "2",
     name: "Nickola Peever",
     initials: "NP",
     lastMessage: "Sounds perfect! I've been wanting to try that place. See you there!",
@@ -45,7 +45,7 @@ const mockChats: Chat[] = [
   },
   {
     id: "3",
-    name: "Farand Hume", 
+    name: "Farand Hume",
     initials: "FH",
     lastMessage: "How about 7 PM at the new Italian place downtown?",
     timestamp: "Yesterday"
@@ -53,7 +53,7 @@ const mockChats: Chat[] = [
   {
     id: "4",
     name: "Ossie Peasey",
-    initials: "OP", 
+    initials: "OP",
     lastMessage: "Hey Bonnie, yes, definitely! What time should we meet?",
     timestamp: "13 days"
   },
@@ -332,9 +332,9 @@ export default function InboxPage() {
             onBackToChats={handleBackToChats}
           />
         )}
-        <ChatMobileNav 
-          activeTab={activeTab} 
-          onTabChange={setActiveTab} 
+        <ChatMobileNav
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
         />
       </div>
     )

@@ -8,7 +8,7 @@ export default function Kanban() {
       title="Kanban"
       description="Agile workflow visualization that actually works. Move tasks between columns with smooth animations, built with React and Shadcn UI who value clean code and great user experiences."
     >
-        <KanbanComponent />
+      <KanbanComponent />
     </MainLayout>
   )
 }

@@ -652,7 +652,42 @@ export default function FileManager() {
                                         <TableCell>{file.uploadDate}</TableCell>
                                         <TableCell>
                                             <Button variant="ghost" size="icon" className="h-8 w-8">
-                                                <MoreHorizontal className="h-4 w-4" />
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
+                                                            <MoreHorizontal className="h-4 w-4" />
+                                                        </Button>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-[100px] rounded-xs p-0 shadow-sm" align="end" sideOffset={5}>
+                                                        <div className="flex flex-col divide-y divide-gray-100">
+                                                            <Button
+                                                                variant="ghost"
+                                                                className="flex items-center justify-start text-xs font-normal border-none rounded-none hover:bg-gray-50 h-7"
+                                                                onClick={() => console.log(`Downloading file`)}
+                                                            >
+                                                                <Download className="h-2 w-2" />
+                                                                Download
+                                                            </Button>
+                                                            <Button
+                                                                variant="ghost"
+                                                                className="flex items-center justify-start  text-xs font-normal border-none rounded-none hover:bg-gray-50 h-7"
+                                                                onClick={() => console.log(`Sharing file`)}
+                                                            >
+                                                                <Share className="h-2 w-2" />
+                                                                Share
+                                                            </Button>
+
+                                                            <Button
+                                                                variant="ghost"
+                                                                className="flex items-center border-t justify-start px-2 py-1 text-xs font-normal text-red-500 rounded-none hover:bg-gray-50 h-7"
+                                                                onClick={() => console.log(`Deleting file`)}
+                                                            >
+                                                                <Trash className="h-2 w-2" />
+                                                                Delete
+                                                            </Button>
+                                                        </div>
+                                                    </PopoverContent>
+                                                </Popover>
                                             </Button>
                                         </TableCell>
                                     </TableRow>
