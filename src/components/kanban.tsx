@@ -11,9 +11,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog"
-import { 
-  Search, 
-  GripVertical, 
+import {
+  Search,
+  GripVertical,
   Paperclip,
   UserPlus,
   MessageSquare,
@@ -38,6 +38,8 @@ interface Task {
   attachments: number
   progress: number
 }
+
+
 
 const initialTasks: Task[] = [
   {
@@ -204,7 +206,7 @@ const initialTasks: Task[] = [
 ]
 
 
-// TaskCard with React DnD
+
 const TaskCard = ({ task, isPreview = false }: {
   task: Task
   isPreview?: boolean
@@ -219,13 +221,13 @@ const TaskCard = ({ task, isPreview = false }: {
 
   if (isPreview) {
     return (
-      <Card className="p-4 bg-blue-50 rounded-sm border-2 border-blue-300 border-dashed transition-all duration-300 ease-in-out shadow-lg">
+      <Card className="p-4 bg-blue-50 rounded-sm transition-all duration-300 ease-in-out shadow-lg">
         <div className="space-y-4">
           <div>
             <h4 className="font-semibold text-lg text-gray-900 mb-2">{task.title}</h4>
             <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">{task.description}</p>
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               {task.assignees.slice(0, 2).map((assignee: any, index: number) => (
@@ -257,13 +259,12 @@ const TaskCard = ({ task, isPreview = false }: {
                     fill="none"
                     strokeDasharray={`${2 * Math.PI * 6}`}
                     strokeDashoffset={`${2 * Math.PI * 6 * (1 - task.progress / 100)}`}
-                    className={`${
-                      task.progress === 100 ? 'text-green-600' :
+                    className={`${task.progress === 100 ? 'text-green-600' :
                       task.progress >= 75 ? 'text-blue-600' :
-                      task.progress >= 50 ? 'text-yellow-600' :
-                      task.progress >= 25 ? 'text-orange-600' :
-                      'text-red-600'
-                    }`}
+                        task.progress >= 50 ? 'text-yellow-600' :
+                          task.progress >= 25 ? 'text-orange-600' :
+                            'text-red-600'
+                      }`}
                     strokeLinecap="round"
                   />
                 </svg>
@@ -273,12 +274,12 @@ const TaskCard = ({ task, isPreview = false }: {
           </div>
 
           <Separator className="my-2" />
-          
+
           <div className="flex items-center justify-between mt-3">
             <Badge className="text-sm px-2 bg-white text-gray-800 rounded border border-gray-200">
               {task.priority}
             </Badge>
-            
+
             <div className="flex items-center space-x-3 text-sm text-gray-500">
               <div className="flex items-center space-x-1">
                 <Paperclip className="h-4 w-4" />
@@ -296,18 +297,17 @@ const TaskCard = ({ task, isPreview = false }: {
   }
 
   return (
-    <Card 
+    <Card
       ref={drag as any}
-      className={`p-4 bg-white rounded-sm border-none transition-all duration-300 ease-in-out ${
-        dragState ? 'opacity-0' : 'cursor-grab hover:shadow-lg'
-      }`}
+      className={`p-4 bg-white rounded-sm border-none transition-all duration-300 ease-in-out ${dragState ? 'opacity-0' : 'cursor-grab hover:shadow-lg'
+        }`}
     >
       <div className="space-y-4">
         <div>
           <h4 className="font-semibold text-md text-gray-900 mb-2">{task.title}</h4>
           <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">{task.description}</p>
         </div>
-        
+
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             {task.assignees.slice(0, 2).map((assignee: any, index: number) => (
@@ -339,13 +339,12 @@ const TaskCard = ({ task, isPreview = false }: {
                   fill="none"
                   strokeDasharray={`${2 * Math.PI * 6}`}
                   strokeDashoffset={`${2 * Math.PI * 6 * (1 - task.progress / 100)}`}
-                  className={`${
-                    task.progress === 100 ? 'text-green-600' :
+                  className={`${task.progress === 100 ? 'text-green-600' :
                     task.progress >= 75 ? 'text-blue-600' :
-                    task.progress >= 50 ? 'text-yellow-600' :
-                    task.progress >= 25 ? 'text-orange-600' :
-                    'text-red-600'
-                  }`}
+                      task.progress >= 50 ? 'text-yellow-600' :
+                        task.progress >= 25 ? 'text-orange-600' :
+                          'text-red-600'
+                    }`}
                   strokeLinecap="round"
                 />
               </svg>
@@ -355,12 +354,12 @@ const TaskCard = ({ task, isPreview = false }: {
         </div>
 
         <Separator className="my-2" />
-        
+
         <div className="flex items-center justify-between mt-3">
           <Badge className="text-sm px-2 bg-white text-gray-800 rounded border border-gray-200">
             {task.priority}
           </Badge>
-          
+
           <div className="flex items-center space-x-3 text-sm text-gray-500">
             <div className="flex items-center space-x-1">
               <Paperclip className="h-4 w-4" />
@@ -378,7 +377,7 @@ const TaskCard = ({ task, isPreview = false }: {
 }
 
 // TaskColumn with real-time positioning and preview
-const TaskColumn = ({ status, tasks, onMoveTask, onReorderTask, dragOverIndex, draggedTask, draggedTaskId, previewTasks }: {
+const TaskColumn = ({ status, tasks, onMoveTask, onReorderTask, dragOverIndex, draggedTask, draggedTaskId, previewTasks, setAddTaskOpen }: {
   status: { key: string; label: string; count: number }
   tasks: Task[]
   onMoveTask: (taskId: string, newStatus: string, insertIndex?: number) => void
@@ -386,7 +385,9 @@ const TaskColumn = ({ status, tasks, onMoveTask, onReorderTask, dragOverIndex, d
   dragOverIndex: number | null
   draggedTask: Task | null
   draggedTaskId: string | null
-  previewTasks?: Task[]
+  previewTasks?: Task[],
+  setAddTaskOpen: React.Dispatch<React.SetStateAction<boolean>>
+
 }) => {
   const [{ isOver }, drop] = useDrop({
     accept: 'task',
@@ -394,14 +395,14 @@ const TaskColumn = ({ status, tasks, onMoveTask, onReorderTask, dragOverIndex, d
       const clientOffset = monitor.getClientOffset()
       if (clientOffset) {
         const rect = document.querySelector(`[data-column="${status.key}"]`)?.getBoundingClientRect()
-        
+
         if (rect) {
           const y = clientOffset.y - rect.top
           const taskHeight = 200
           const index = Math.floor(y / taskHeight)
           const maxIndex = tasks.length
           const clampedIndex = Math.min(Math.max(index, 0), maxIndex)
-          
+
           if (item.status !== status.key) {
             onMoveTask(item.id, status.key, clampedIndex)
           } else {
@@ -414,7 +415,7 @@ const TaskColumn = ({ status, tasks, onMoveTask, onReorderTask, dragOverIndex, d
       const clientOffset = monitor.getClientOffset()
       if (clientOffset) {
         const rect = document.querySelector(`[data-column="${status.key}"]`)?.getBoundingClientRect()
-        
+
         if (rect) {
           // Update drag over index for real-time feedback
           if (draggedTask && draggedTask.id !== item.id) {
@@ -432,17 +433,16 @@ const TaskColumn = ({ status, tasks, onMoveTask, onReorderTask, dragOverIndex, d
   const displayTasks = previewTasks || tasks
 
   return (
-    <div 
+    <div
       ref={drop as any}
       data-column={status.key}
-      className={`bg-gray-50 rounded-lg p-4 transition-all duration-300 ease-in-out ${
-        isOver ? 'bg-blue-50 border-2 border-blue-300 border-dashed' : 'hover:shadow-lg'
-      }`}
+      className={`bg-accent rounded-lg p-4 transition-all duration-300 ease-in-out ${isOver ? 'bg-blue-50 border-2 border-blue-300 border-dashed' : 'border border-transparent'
+        }`}
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
           <h3 className="font-semibold text-md text-gray-900">{status.label}</h3>
-          <Badge variant="secondary" className="bg-white border border-gray-200 text-gray-600 text-xs px-2 rounded">
+          <Badge variant="secondary" className="bg-gray-50 border border-gray-200 text-gray-600 text-xs px-2 rounded">
             {status.count}
           </Badge>
         </div>
@@ -452,7 +452,7 @@ const TaskColumn = ({ status, tasks, onMoveTask, onReorderTask, dragOverIndex, d
           </Button>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-gray-200">
+              <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-gray-200" onClick={() => { setAddTaskOpen(true) }}>
                 <CirclePlus className="h-4 w-4 text-gray-600" />
               </Button>
             </TooltipTrigger>
@@ -462,7 +462,8 @@ const TaskColumn = ({ status, tasks, onMoveTask, onReorderTask, dragOverIndex, d
           </Tooltip>
         </div>
       </div>
-      
+
+
       <div className="space-y-3">
         {displayTasks.map((task: Task, index: number) => (
           <React.Fragment key={task.id}>
@@ -470,29 +471,30 @@ const TaskColumn = ({ status, tasks, onMoveTask, onReorderTask, dragOverIndex, d
             {dragOverIndex === index && (
               <div className="h-1 bg-blue-400 rounded-full my-2 transition-all duration-300 ease-in-out"></div>
             )}
-            
+
             {task.id === draggedTaskId ? (
-              <TaskCard 
-                task={task} 
+              <TaskCard
+                task={task}
                 isPreview={true}
               />
             ) : (
-              <TaskCard 
-                task={task} 
+              <TaskCard
+                task={task}
               />
             )}
           </React.Fragment>
         ))}
-        
-        {/* Drop indicator at the end */}
-        {dragOverIndex === displayTasks.length && (
-          <div className="h-1 bg-blue-400 rounded-full my-2 transition-all duration-300 ease-in-out"></div>
-        )}
-        
+
+
         {(!displayTasks || displayTasks.length === 0) && !draggedTask && (
-          <div className="flex flex-col items-center justify-center h-32 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
-            <p className="text-sm text-gray-500 mb-2">No task added here.</p>
-            <Button variant="outline" size="sm" className="h-8">
+          <div className="flex flex-col">
+            <p className="text-sm text-gray-500 mb-4 mt-5">No task added here.</p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full h-10 border border-gray-300 bg-white text-gray-700 font-normal hover:bg-gray-50"
+              onClick={() => setAddTaskOpen(true)}
+            >
               Add Task
             </Button>
           </div>
@@ -534,9 +536,8 @@ const ColumnContainer = ({ status, onColumnMove, children }: {
         drag(node)
         drop(node)
       }}
-      className={`transition-all duration-300 ease-in-out ${
-        isDragging ? 'opacity-50 scale-105' : ''
-      } ${isOver ? 'ring-2 ring-blue-300' : ''}`}
+      className={`transition-all duration-300 ease-in-out ${isDragging ? 'opacity-50 scale-105' : ''
+        } ${isOver ? 'ring-2 ring-blue-300' : ''}`}
     >
       {children}
     </div>
@@ -549,10 +550,10 @@ export default function KanbanComponent() {
   const [tasks, setTasks] = useState<Task[]>(initialTasks)
   const [searchTerm, setSearchTerm] = useState("")
   const [columnOrder, setColumnOrder] = useState<string[]>([
-    "backlog", 
-    "todo", 
-    "in-progress", 
-    "for-checking", 
+    "backlog",
+    "todo",
+    "in-progress",
+    "for-checking",
     "done"
   ])
   const [dragOverIndex] = useState<number | null>(null)
@@ -569,6 +570,38 @@ export default function KanbanComponent() {
   const [assignUsersOpen, setAssignUsersOpen] = useState(false)
   const [assigneeSearch, setAssigneeSearch] = useState("")
   const [selectedAssignees, setSelectedAssignees] = useState<string[]>([])
+  const [addBoardOpen, setAddBoardOpen] = useState(false)
+  const [newBoardName, setNewBoardName] = useState("")
+
+
+  // ADD TASK
+  const [addTaskOpen, setAddTaskOpen] = useState(false)
+  const [newTaskTitle, setNewTaskTitle] = useState("")
+  const [newTaskDescription, setNewTaskDescription] = useState("")
+  const [newTaskPriority, setNewTaskPriority] = useState<"high" | "medium" | "low">("medium")
+
+
+  const handleAddTask = () => {
+    if (!newTaskTitle.trim()) return
+    setTasks(prev => [
+      ...prev,
+      {
+        id: Math.random().toString(36).substr(2, 6).toUpperCase(),
+        title: newTaskTitle,
+        description: newTaskDescription,
+        priority: newTaskPriority,
+        status: "backlog",
+        assignees: [],
+        comments: 0,
+        attachments: 0,
+        progress: 0,
+      }
+    ])
+    setAddTaskOpen(false)
+    setNewTaskTitle("")
+    setNewTaskDescription("")
+    setNewTaskPriority("medium")
+  }
 
   const availableUsers = [
     { id: "olivia", name: "Olivia Martin", email: "m@example.com", initials: "OM", color: "bg-blue-500" },
@@ -594,6 +627,12 @@ export default function KanbanComponent() {
     )
   }
 
+  const handleAddBoard = () => {
+    if (!newBoardName.trim()) return
+    setNewBoardName("")
+    setAddBoardOpen(false)
+  }
+
   const handleAssignUsers = () => {
     console.log("Assigned users:", selectedAssignees)
     setAssignUsersOpen(false)
@@ -604,7 +643,7 @@ export default function KanbanComponent() {
   const handleFilterChange = (category: string, value: string, checked: boolean) => {
     setFilters(prev => ({
       ...prev,
-      [category]: checked 
+      [category]: checked
         ? [...prev[category as keyof typeof prev], value]
         : prev[category as keyof typeof prev].filter(item => item !== value)
     }))
@@ -627,16 +666,16 @@ export default function KanbanComponent() {
       const filteredTasks = prevTasks.filter(task => task.id !== taskId)
       const targetColumnTasks = filteredTasks.filter(task => task.status === newStatus)
       const otherTasks = filteredTasks.filter(task => task.status !== newStatus)
-      
+
       const newTask = { ...prevTasks.find(task => task.id === taskId)!, status: newStatus as Task["status"] }
       const insertAt = insertIndex !== undefined ? insertIndex : targetColumnTasks.length
-      
+
       const updatedTargetColumn = [
         ...targetColumnTasks.slice(0, insertAt),
         newTask,
         ...targetColumnTasks.slice(insertAt)
       ]
-      
+
       return [...otherTasks, ...updatedTargetColumn]
     })
   }
@@ -646,15 +685,15 @@ export default function KanbanComponent() {
       const filteredTasks = prevTasks.filter(task => task.id !== taskId)
       const targetColumnTasks = filteredTasks.filter(task => task.status === status)
       const otherTasks = filteredTasks.filter(task => task.status !== status)
-      
+
       const newTask = { ...prevTasks.find(task => task.id === taskId)!, status: status as Task["status"] }
-      
+
       const updatedTargetColumn = [
         ...targetColumnTasks.slice(0, insertIndex),
         newTask,
         ...targetColumnTasks.slice(insertIndex)
       ]
-      
+
       return [...otherTasks, ...updatedTargetColumn]
     })
   }
@@ -663,7 +702,7 @@ export default function KanbanComponent() {
     const newOrder = [...columnOrder]
     const draggedIndex = newOrder.indexOf(draggedColumnId)
     const targetIndex = newOrder.indexOf(targetColumnId)
-    
+
     if (draggedIndex !== -1 && targetIndex !== -1) {
       newOrder.splice(draggedIndex, 1)
       newOrder.splice(targetIndex, 0, draggedColumnId)
@@ -672,17 +711,15 @@ export default function KanbanComponent() {
   }
 
 
-
-  // Create preview tasks for real-time feedback
   const createPreviewTasks = () => {
     if (!draggedTask) return {}
 
     const filteredTasks = tasks.filter(task => task.id !== draggedTask.id)
     const preview: Record<string, Task[]> = {}
 
-    // Create preview for each column
+
     const statuses = ["backlog", "todo", "in-progress", "for-checking", "done"]
-    
+
     statuses.forEach(status => {
       const columnTasks = filteredTasks.filter(task => task.status === status)
       preview[status] = columnTasks
@@ -712,11 +749,11 @@ export default function KanbanComponent() {
     { key: "done", label: "Done", count: groupedTasks.done?.length || 0 }
   ]
 
-  const orderedStatuses = columnOrder.map(key => 
+  const orderedStatuses = columnOrder.map(key =>
     statuses.find(status => status.key === key)
   ).filter(Boolean) as typeof statuses
 
-  // Update preview tasks when drag state changes
+
   useEffect(() => {
     if (draggedTask) {
       const preview = createPreviewTasks()
@@ -741,7 +778,7 @@ export default function KanbanComponent() {
     <DndProvider backend={HTML5Backend}>
       <div className="bg-white">
         <div className={`${isMobile ? '' : 'max-w-[1230px] mx-auto'}`}>
-          <div className="mb-8">  
+          <div className="mb-8">
             {isMobile ? (
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
@@ -758,8 +795,8 @@ export default function KanbanComponent() {
                         <AvatarFallback className="bg-orange-500 text-white text-sm">JS</AvatarFallback>
                       </Avatar>
                     </div>
-                    <div className="flex items-center ">
-                      <span className="text-sm text-gray-500">+5</span>
+                    <div className="flex items-center space-x-3">
+                      <span className="text-sm text-gray-500 ">+5</span>
                       <Dialog open={assignUsersOpen} onOpenChange={setAssignUsersOpen}>
                         <DialogTrigger asChild>
                           <Button variant="outline" size="sm" className="h-9 w-9 p-0 rounded-sm border-gray-300">
@@ -774,7 +811,7 @@ export default function KanbanComponent() {
                           <div className="p-4 pb-0">
                             <h2 className="text-lg font-semibold text-gray-900">Assign Users</h2>
                           </div>
-                          
+
                           <div className="">
                             <div className="relative">
                               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -786,15 +823,13 @@ export default function KanbanComponent() {
                               />
                             </div>
                           </div>
-                          
                           <ScrollArea className="h-64">
                             <div>
                               {filteredUsers.map((user) => (
                                 <div
                                   key={user.id}
-                                  className={`flex items-center space-x-3 px-4 py-3 cursor-pointer hover:bg-gray-50 ${
-                                    selectedAssignees.includes(user.id) ? 'bg-amber-50' : ''
-                                  }`}
+                                  className={`flex items-center space-x-3 px-4 py-3 cursor-pointer hover:bg-gray-50 ${selectedAssignees.includes(user.id) ? 'bg-amber-50' : ''
+                                    }`}
                                   onClick={() => handleAssigneeToggle(user.id)}
                                 >
                                   <Avatar className="h-8 w-8">
@@ -817,7 +852,7 @@ export default function KanbanComponent() {
                               ))}
                             </div>
                           </ScrollArea>
-                          
+
                           <div className="border-t p-4 flex items-center justify-between">
                             {selectedAssignees.length > 0 ? (
                               <div className="flex items-center">
@@ -835,8 +870,8 @@ export default function KanbanComponent() {
                             ) : (
                               <p className="text-sm text-gray-500">Select the users to add to this role.</p>
                             )}
-                            <Button 
-                              onClick={handleAssignUsers} 
+                            <Button
+                              onClick={handleAssignUsers}
                               className={`${selectedAssignees.length > 0 ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-300 cursor-not-allowed'} text-white`}
                               disabled={selectedAssignees.length === 0}
                             >
@@ -848,7 +883,7 @@ export default function KanbanComponent() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <Tabs defaultValue="board" className="w-auto">
                     <TabsList className="grid w-auto grid-cols-3 bg-gray-100 h-9 rounded-sm">
@@ -857,11 +892,27 @@ export default function KanbanComponent() {
                       <TabsTrigger value="table" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-sm px-4 py-1 text-sm">Table</TabsTrigger>
                     </TabsList>
                   </Tabs>
-                  
+
                   <div className="flex items-center space-x-2">
-                    <Button variant="outline" size="sm" className="h-9 w-9 p-0 rounded-sm border-gray-300">
-                      <Search className="h-4 w-4" />
-                    </Button>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" size="sm" className="h-9 w-9 p-0 rounded-sm border-gray-300">
+                          <Search className="h-4 w-4" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[250px] p-0" align="end">
+                        <div className="relative">
+                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                          <Input
+                            placeholder="Search tasks..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="pl-10 w-full border-blue-400 focus-visible:ring-0 focus-visible:ring-offset-0"
+                            autoFocus
+                          />
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button variant="outline" size="sm" className="h-9 w-9 p-0 rounded-sm border-gray-300">
@@ -879,136 +930,122 @@ export default function KanbanComponent() {
                               className="pl-10 bg-gray-50 border-gray-200"
                             />
                           </div>
-                          
+
                           <ScrollArea className="h-64">
                             <div className="space-y-1 pr-4">
                               <div>
                                 <h4 className="font-medium text-sm text-gray-900 mb-2">Status</h4>
                                 <div className="space-y-1 ml-2">
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.status.includes('completed') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.status.includes('completed') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('status', 'completed', !filters.status.includes('completed'))}
                                   >
                                     Completed
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.status.includes('in-progress') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.status.includes('in-progress') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('status', 'in-progress', !filters.status.includes('in-progress'))}
                                   >
                                     In Progress
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.status.includes('not-started') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.status.includes('not-started') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('status', 'not-started', !filters.status.includes('not-started'))}
                                   >
                                     Not Started
                                   </div>
                                 </div>
                               </div>
-                              
+
                               <Separator />
-                              
+
                               <div>
                                 <h4 className="font-medium text-sm text-gray-900 mb-2">Priority</h4>
                                 <div className="space-y-1 ml-2">
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.priority.includes('high') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.priority.includes('high') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('priority', 'high', !filters.priority.includes('high'))}
                                   >
                                     High
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.priority.includes('medium') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.priority.includes('medium') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('priority', 'medium', !filters.priority.includes('medium'))}
                                   >
                                     Medium
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.priority.includes('low') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.priority.includes('low') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('priority', 'low', !filters.priority.includes('low'))}
                                   >
                                     Low
                                   </div>
                                 </div>
                               </div>
-                              
+
                               <Separator />
-                              
+
                               <div>
                                 <h4 className="font-medium text-sm text-gray-900 mb-2">Assigned To</h4>
                                 <div className="space-y-1 ml-2">
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.assignees.includes('liam') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.assignees.includes('liam') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('assignees', 'liam', !filters.assignees.includes('liam'))}
                                   >
                                     Liam
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.assignees.includes('isabella') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.assignees.includes('isabella') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('assignees', 'isabella', !filters.assignees.includes('isabella'))}
                                   >
                                     Isabella
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.assignees.includes('noah') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.assignees.includes('noah') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('assignees', 'noah', !filters.assignees.includes('noah'))}
                                   >
                                     Noah
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.assignees.includes('ella') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.assignees.includes('ella') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('assignees', 'ella', !filters.assignees.includes('ella'))}
                                   >
                                     Ella
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.assignees.includes('ethan') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.assignees.includes('ethan') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('assignees', 'ethan', !filters.assignees.includes('ethan'))}
                                   >
                                     Ethan
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.assignees.includes('grace') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.assignees.includes('grace') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('assignees', 'grace', !filters.assignees.includes('grace'))}
                                   >
                                     Grace
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.assignees.includes('harper') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.assignees.includes('harper') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('assignees', 'harper', !filters.assignees.includes('harper'))}
                                   >
                                     Harper
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.assignees.includes('benjamin') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.assignees.includes('benjamin') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('assignees', 'benjamin', !filters.assignees.includes('benjamin'))}
                                   >
                                     Benjamin
@@ -1017,11 +1054,11 @@ export default function KanbanComponent() {
                               </div>
                             </div>
                           </ScrollArea>
-                          
+
                           <Separator className="my-4" />
-                          
-                          <Button 
-                            variant="outline" 
+
+                          <Button
+                            variant="outline"
                             className="w-full bg-gray-50 hover:bg-gray-100"
                             onClick={clearFilters}
                           >
@@ -1030,7 +1067,11 @@ export default function KanbanComponent() {
                         </div>
                       </PopoverContent>
                     </Popover>
-                    <Button size="sm" className="h-9 w-9 p-0 rounded-sm bg-blue-600 hover:bg-blue-700">
+                    <Button
+                      size="sm"
+                      className="h-9 w-9 p-0 rounded-sm bg-blue-600 hover:bg-blue-700"
+                      onClick={() => setAddBoardOpen(true)}
+                    >
                       <CirclePlus className="h-4 w-4" />
                     </Button>
                   </div>
@@ -1062,8 +1103,10 @@ export default function KanbanComponent() {
                         <AvatarFallback className="bg-orange-500 text-white text-sm">JS</AvatarFallback>
                       </Avatar>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm text-gray-500">+5</span>
+                    <div className="flex items-center space-x-5">
+                      <span className="text-sm text-gray-500 -ml-3">+5</span>
+
+                      {/* Assign Users Dialog */}
                       <Dialog open={assignUsersOpen} onOpenChange={setAssignUsersOpen}>
                         <DialogTrigger asChild>
                           <Button variant="outline" size="sm" className="h-9 px-3 rounded-sm text-sm border-gray-300">
@@ -1079,7 +1122,7 @@ export default function KanbanComponent() {
                           <div className="p-4 pb-0">
                             <h2 className="text-lg font-semibold text-gray-900">Assign Users</h2>
                           </div>
-                          
+
                           <div className="">
                             <div className="relative">
                               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -1091,15 +1134,14 @@ export default function KanbanComponent() {
                               />
                             </div>
                           </div>
-                          
+
                           <ScrollArea className="h-64">
                             <div>
                               {filteredUsers.map((user) => (
                                 <div
                                   key={user.id}
-                                  className={`flex items-center space-x-3 px-4 py-3 cursor-pointer hover:bg-gray-50 ${
-                                    selectedAssignees.includes(user.id) ? 'bg-amber-50' : ''
-                                  }`}
+                                  className={`flex items-center space-x-3 px-4 py-3 cursor-pointer hover:bg-gray-50 ${selectedAssignees.includes(user.id) ? 'bg-amber-50' : ''
+                                    }`}
                                   onClick={() => handleAssigneeToggle(user.id)}
                                 >
                                   <Avatar className="h-8 w-8">
@@ -1122,7 +1164,7 @@ export default function KanbanComponent() {
                               ))}
                             </div>
                           </ScrollArea>
-                          
+
                           <div className="border-t p-4 flex items-center justify-between">
                             {selectedAssignees.length > 0 ? (
                               <div className="flex items-center">
@@ -1140,8 +1182,8 @@ export default function KanbanComponent() {
                             ) : (
                               <p className="text-sm text-gray-500">Select the users to add to this role.</p>
                             )}
-                            <Button 
-                              onClick={handleAssignUsers} 
+                            <Button
+                              onClick={handleAssignUsers}
                               className={`${selectedAssignees.length > 0 ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-300 cursor-not-allowed'} text-white`}
                               disabled={selectedAssignees.length === 0}
                             >
@@ -1152,7 +1194,7 @@ export default function KanbanComponent() {
                       </Dialog>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center justify-end space-x-3">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -1163,7 +1205,8 @@ export default function KanbanComponent() {
                         className="pl-10 w-64 h-8 border-gray-300"
                       />
                     </div>
-                    
+
+                    {/* Filters Popover */}
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button variant="outline" size="sm" className="h-9 px-3 rounded-sm text-sm border-gray-300">
@@ -1182,136 +1225,122 @@ export default function KanbanComponent() {
                               className="pl-10 bg-gray-50 border-gray-200"
                             />
                           </div>
-                          
+
                           <ScrollArea className="h-64">
                             <div className="space-y-1 pr-4">
                               <div>
                                 <h4 className="font-medium text-sm text-gray-900 mb-2">Status</h4>
                                 <div className="space-y-1 ml-2">
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.status.includes('completed') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.status.includes('completed') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('status', 'completed', !filters.status.includes('completed'))}
                                   >
                                     Completed
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.status.includes('in-progress') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.status.includes('in-progress') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('status', 'in-progress', !filters.status.includes('in-progress'))}
                                   >
                                     In Progress
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.status.includes('not-started') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.status.includes('not-started') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('status', 'not-started', !filters.status.includes('not-started'))}
                                   >
                                     Not Started
                                   </div>
                                 </div>
                               </div>
-                              
+
                               <Separator />
-                              
+
                               <div>
                                 <h4 className="font-medium text-sm text-gray-900 mb-2">Priority</h4>
                                 <div className="space-y-1 ml-2">
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.priority.includes('high') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.priority.includes('high') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('priority', 'high', !filters.priority.includes('high'))}
                                   >
                                     High
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.priority.includes('medium') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.priority.includes('medium') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('priority', 'medium', !filters.priority.includes('medium'))}
                                   >
                                     Medium
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.priority.includes('low') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.priority.includes('low') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('priority', 'low', !filters.priority.includes('low'))}
                                   >
                                     Low
                                   </div>
                                 </div>
                               </div>
-                              
+
                               <Separator />
-                              
+
                               <div>
                                 <h4 className="font-medium text-sm text-gray-900 mb-2">Assigned To</h4>
                                 <div className="space-y-1 ml-2">
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.assignees.includes('liam') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.assignees.includes('liam') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('assignees', 'liam', !filters.assignees.includes('liam'))}
                                   >
                                     Liam
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.assignees.includes('isabella') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.assignees.includes('isabella') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('assignees', 'isabella', !filters.assignees.includes('isabella'))}
                                   >
                                     Isabella
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.assignees.includes('noah') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.assignees.includes('noah') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('assignees', 'noah', !filters.assignees.includes('noah'))}
                                   >
                                     Noah
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.assignees.includes('ella') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.assignees.includes('ella') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('assignees', 'ella', !filters.assignees.includes('ella'))}
                                   >
                                     Ella
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.assignees.includes('ethan') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.assignees.includes('ethan') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('assignees', 'ethan', !filters.assignees.includes('ethan'))}
                                   >
                                     Ethan
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.assignees.includes('grace') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.assignees.includes('grace') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('assignees', 'grace', !filters.assignees.includes('grace'))}
                                   >
                                     Grace
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.assignees.includes('harper') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.assignees.includes('harper') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('assignees', 'harper', !filters.assignees.includes('harper'))}
                                   >
                                     Harper
                                   </div>
-                                  <div 
-                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${
-                                      filters.assignees.includes('benjamin') ? 'bg-gray-100' : ''
-                                    }`}
+                                  <div
+                                    className={`px-2 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 rounded ${filters.assignees.includes('benjamin') ? 'bg-gray-100' : ''
+                                      }`}
                                     onClick={() => handleFilterChange('assignees', 'benjamin', !filters.assignees.includes('benjamin'))}
                                   >
                                     Benjamin
@@ -1320,11 +1349,11 @@ export default function KanbanComponent() {
                               </div>
                             </div>
                           </ScrollArea>
-                          
+
                           <Separator className="my-4" />
-                          
-                          <Button 
-                            variant="outline" 
+
+                          <Button
+                            variant="outline"
                             className="w-full bg-gray-50 hover:bg-gray-100"
                             onClick={clearFilters}
                           >
@@ -1333,8 +1362,8 @@ export default function KanbanComponent() {
                         </div>
                       </PopoverContent>
                     </Popover>
-                    
-                    <Button size="sm" className="h-9 px-3 rounded-sm bg-blue-600 hover:bg-blue-700 text-sm">
+
+                    <Button size="sm" className="h-9 px-3 rounded-sm bg-blue-600 hover:bg-blue-700 text-sm" onClick={() => setAddBoardOpen(true)}>
                       <CirclePlus className="h-4 w-4" />
                       Add Board
                     </Button>
@@ -1344,9 +1373,99 @@ export default function KanbanComponent() {
             )}
           </div>
 
-          {/* Blue dragged container that follows mouse */}
+          {/* Add Board Dialog */}
+          <Dialog open={addBoardOpen} onOpenChange={setAddBoardOpen}>
+            <DialogContent className="p-0 gap-0 w-[450px]">
+              <DialogHeader className="p-6 pb-2">
+                <DialogTitle className="text-xl font-semibold">Add New Board</DialogTitle>
+                <DialogDescription>
+                  Create a new board to organize your tasks.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="p-6 pt-2">
+                <div className="flex items-center gap-2">
+                  <Input
+                    placeholder="Enter board name..."
+                    value={newBoardName}
+                    onChange={e => setNewBoardName(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && handleAddBoard()}
+                    className="flex h-10 w-full rounded-md bg-white px-4 py-2 text-base ring-0 focus-visible:outline-none focus-visible:border-blue-400"
+                    autoFocus
+                  />
+                  <Button
+                    size="sm"
+                    className="h-10 w-10 p-0 bg-blue-400 hover:bg-blue-500"
+                    onClick={handleAddBoard}
+                    disabled={!newBoardName.trim()}
+                  >
+                    <Check className="h-5 w-5 text-white" />
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+
+
+          {/* Add Task Dialog */}
+          <Dialog open={addTaskOpen} onOpenChange={setAddTaskOpen}>
+            <DialogContent className="sm:max-w-md p-4">
+              <DialogHeader>
+                <DialogTitle>Add Task</DialogTitle>
+                <DialogDescription>
+                  Create a new task for your board.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <Input
+                  placeholder="Task title"
+                  value={newTaskTitle}
+                  onChange={e => setNewTaskTitle(e.target.value)}
+                  className="w-full"
+                  autoFocus
+                />
+                <Input
+                  placeholder="Description"
+                  value={newTaskDescription}
+                  onChange={e => setNewTaskDescription(e.target.value)}
+                  className="w-full"
+                />
+                <div className="flex gap-2">
+                  <Button
+                    variant={newTaskPriority === "high" ? "default" : "outline"}
+                    onClick={() => setNewTaskPriority("high")}
+                  >
+                    High
+                  </Button>
+                  <Button
+                    variant={newTaskPriority === "medium" ? "default" : "outline"}
+                    onClick={() => setNewTaskPriority("medium")}
+                  >
+                    Medium
+                  </Button>
+                  <Button
+                    variant={newTaskPriority === "low" ? "default" : "outline"}
+                    onClick={() => setNewTaskPriority("low")}
+                  >
+                    Low
+                  </Button>
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setAddTaskOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleAddTask} disabled={!newTaskTitle.trim()}>
+                    Add
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+
+          {/* Dragged Task Preview */}
           {draggedTask && (
-            <div 
+            <div
               className="fixed z-50 pointer-events-none"
               style={{
                 left: dragPosition.x - 160,
@@ -1359,7 +1478,7 @@ export default function KanbanComponent() {
                     <h4 className="font-semibold text-lg text-gray-900 mb-2">{draggedTask.title}</h4>
                     <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">{draggedTask.description}</p>
                   </div>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       {draggedTask.assignees.slice(0, 2).map((assignee: any, index: number) => (
@@ -1391,13 +1510,12 @@ export default function KanbanComponent() {
                             fill="none"
                             strokeDasharray={`${2 * Math.PI * 6}`}
                             strokeDashoffset={`${2 * Math.PI * 6 * (1 - draggedTask.progress / 100)}`}
-                            className={`${
-                              draggedTask.progress === 100 ? 'text-green-600' :
+                            className={`${draggedTask.progress === 100 ? 'text-green-600' :
                               draggedTask.progress >= 75 ? 'text-blue-600' :
-                              draggedTask.progress >= 50 ? 'text-yellow-600' :
-                              draggedTask.progress >= 25 ? 'text-orange-600' :
-                              'text-red-600'
-                            }`}
+                                draggedTask.progress >= 50 ? 'text-yellow-600' :
+                                  draggedTask.progress >= 25 ? 'text-orange-600' :
+                                    'text-red-600'
+                              }`}
                             strokeLinecap="round"
                           />
                         </svg>
@@ -1407,12 +1525,12 @@ export default function KanbanComponent() {
                   </div>
 
                   <Separator className="my-2" />
-                  
+
                   <div className="flex items-center justify-between mt-3">
                     <Badge className="text-sm px-2 bg-white text-gray-800 rounded border border-gray-200">
                       {draggedTask.priority}
                     </Badge>
-                    
+
                     <div className="flex items-center space-x-3 text-sm text-gray-500">
                       <div className="flex items-center space-x-1">
                         <Paperclip className="h-4 w-4" />
@@ -1446,6 +1564,7 @@ export default function KanbanComponent() {
                       draggedTask={draggedTask}
                       draggedTaskId={draggedTaskId}
                       previewTasks={previewTasks[status.key]}
+                      setAddTaskOpen={setAddTaskOpen}
                     />
                   </ColumnContainer>
                 </div>
