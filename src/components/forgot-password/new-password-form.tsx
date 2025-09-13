@@ -53,7 +53,7 @@ export default function NewPasswordForm({ email, onBack, onComplete }: NewPasswo
 
   return (
     <Card className="w-full max-w-md bg-gray-900 border-gray-700">
-      <CardHeader className="text-center pb-6">
+      <CardHeader className="text-center pt-2">
         <div className="flex items-center justify-center gap-2 mb-2">
           <Lock className="w-6 h-6 text-white" />
           <CardTitle className="text-2xl text-white">Create New Password</CardTitle>
@@ -63,7 +63,7 @@ export default function NewPasswordForm({ email, onBack, onComplete }: NewPasswo
         </p>
       </CardHeader>
       
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 p-8">
         <div className="bg-green-600/20 border border-green-500/30 rounded-lg p-4">
           <p className="text-green-200 text-sm">
             Your email has been verified. Now create a secure password for your account.

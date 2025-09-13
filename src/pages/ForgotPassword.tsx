@@ -86,7 +86,7 @@ export default function ForgotPassword() {
       default:
         return (
           <Card className="w-full max-w-md bg-gray-900 border-gray-700">
-            <CardHeader className="text-center pb-6">
+            <CardHeader className="text-center pt-2">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Lock className="w-6 h-6 text-white" />
                 <CardTitle className="text-2xl text-white">Reset Password</CardTitle>
@@ -94,7 +94,7 @@ export default function ForgotPassword() {
               <p className="text-gray-300 text-sm">Secure your account with a new password</p>
             </CardHeader>
             
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-6 p-8">
               <div className="bg-blue-600/20 border border-blue-500/30 rounded-lg p-4">
                 <p className="text-blue-200 text-sm">
                   Enter the email address associated with your account. We'll send you a verification code.

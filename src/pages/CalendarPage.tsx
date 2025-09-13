@@ -1,7 +1,7 @@
 import { useState } from "react"
 import CalendarSidebar, { type Event } from "@/components/calendar/calendar-sidebar"
 import CalendarPanel from "@/components/calendar/calendar-panel"
-import CalendarRightSidebar from "@/components/calendar/calendar-right-sidebar"
+import CalendarEventSheet from "@/components/calendar/calendar-event-sheet"
 import { useIsMobile } from "@/hooks/use-mobile"
 
 const mockEvents: Event[] = [
@@ -187,7 +187,7 @@ const CalendarPage = () => {
   if (isMobile) {
     return (
       <div className="flex h-full relative">
-        {/* Main Calendar Panel - takes full width by default */}
+
         <div className="flex-1">
           <CalendarPanel
             selectedDate={selectedDate}
@@ -207,7 +207,7 @@ const CalendarPage = () => {
           />
         </div>
         
-        {/* Events Drawer - overlay when hamburger menu is clicked */}
+      
         {showEventsDrawer && (
           <CalendarSidebar
             events={mockEvents}
@@ -218,8 +218,7 @@ const CalendarPage = () => {
           />
         )}
 
-        {/* Add/Edit Event Sidebar - overlay when add/edit is triggered */}
-        <CalendarRightSidebar
+        <CalendarEventSheet
           isOpen={isAddEventOpen}
           onClose={handleCloseAddEvent}
           onSave={handleSaveEvent}
@@ -238,6 +237,7 @@ const CalendarPage = () => {
         onEventSelect={handleEventSelect}
         onAddEvent={handleAddEvent}
       />
+      
       <CalendarPanel
         selectedDate={selectedDate}
         onDateSelect={setSelectedDate}
@@ -250,9 +250,8 @@ const CalendarPage = () => {
         onEventSelect={handleEventSelect}
         onAddEvent={handleAddEvent}
       />
-      
-      {/* Desktop Right Sidebar */}
-      <CalendarRightSidebar
+
+      <CalendarEventSheet
         isOpen={isAddEventOpen}
         onClose={handleCloseAddEvent}
         onSave={handleSaveEvent}

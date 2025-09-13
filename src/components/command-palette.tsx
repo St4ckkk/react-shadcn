@@ -9,16 +9,14 @@ import {
   CommandItem,
 } from "@/components/ui/command"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { 
-  dashboards,
+import {
   mainItems, 
+  appItems,
   pageItems, 
-  componentItems, 
-  chartsComponents, 
   errorComponents, 
   settingsComponents, 
-  authenticationComponents, 
-//   iconComponents,
+  authenticationComponents,
+  pricingComponents, 
 //   allNavigationItems
 } from "@/data/navigation-data"
 
@@ -49,23 +47,29 @@ const CommandPalette = ({ isOpen, onOpenChange }: CommandPaletteProps) => {
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           
-          <CommandGroup heading="Dashboards">
-            {dashboards.map((dashboard) => (
+          <CommandGroup heading="Navigation">
+            {mainItems.map((item) => (
               <CommandItem
-                key={dashboard.name}
-                value={dashboard.name}
+                key={item.title}
+                value={item.title}
                 onSelect={() => {
+                  navigate(item.url)
                   onOpenChange(false)
                 }}
               >
-                <dashboard.icon className="text-gray-400 h-4 w-4 mr-2" />
-                <span>{dashboard.name}</span>
+                <item.icon className="text-gray-400 h-4 w-4 mr-2" />
+                <span>{item.title}</span>
+                {item.badge && (
+                  <span className="ml-auto bg-red-500 text-white text-xs h-5 w-5 rounded-full flex items-center justify-center">
+                    {item.badge}
+                  </span>
+                )}
               </CommandItem>
             ))}
           </CommandGroup>
 
-          <CommandGroup heading="Navigation">
-            {mainItems.map((item) => (
+          <CommandGroup heading="Apps">
+            {appItems.map((item) => (
               <CommandItem
                 key={item.title}
                 value={item.title}
@@ -99,42 +103,6 @@ const CommandPalette = ({ isOpen, onOpenChange }: CommandPaletteProps) => {
                 <span>{item.title}</span>
               </CommandItem>
             ))}
-          </CommandGroup>
-
-          <CommandGroup heading="UI Components">
-            {componentItems.map((item) => (
-              <CommandItem
-                key={item.title}
-                value={item.title}
-                onSelect={() => {
-                  navigate(item.url)
-                  onOpenChange(false)
-                }}
-              >
-                <item.icon className="text-gray-400 h-4 w-4 mr-2" />
-                <span>{item.title}</span>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-
-
-          <CommandGroup heading="Charts">
-            {chartsComponents.map((item) => (
-              <CommandItem
-                key={item.title}
-                value={item.title}
-                onSelect={() => {
-                  navigate(item.url)
-                  onOpenChange(false)
-                }}
-              >
-                <item.icon className="text-gray-400 h-4 w-4 mr-2" />
-                <span>{item.title}</span>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-
-          <CommandGroup heading="Error Pages">
             {errorComponents.map((item) => (
               <CommandItem
                 key={item.title}
@@ -148,9 +116,6 @@ const CommandPalette = ({ isOpen, onOpenChange }: CommandPaletteProps) => {
                 <span>{item.title}</span>
               </CommandItem>
             ))}
-          </CommandGroup>
-
-          <CommandGroup heading="Settings">
             {settingsComponents.map((item) => (
               <CommandItem
                 key={item.title}
@@ -164,10 +129,20 @@ const CommandPalette = ({ isOpen, onOpenChange }: CommandPaletteProps) => {
                 <span>{item.title}</span>
               </CommandItem>
             ))}
-          </CommandGroup>
-
-          <CommandGroup heading="Authentication">
             {authenticationComponents.map((item) => (
+              <CommandItem
+                key={item.title}
+                value={item.title}
+                onSelect={() => {
+                  navigate(item.url)
+                  onOpenChange(false)
+                }}
+              >
+                <item.icon className="text-gray-400 h-4 w-4 mr-2" />
+                <span>{item.title}</span>
+              </CommandItem>
+            ))}
+            {pricingComponents.map((item) => (
               <CommandItem
                 key={item.title}
                 value={item.title}

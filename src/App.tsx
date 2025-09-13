@@ -4,7 +4,7 @@ import PageTitle from "@/components/PageTitle"
 import Home from "@/pages/Home"
 import Inbox from "@/pages/Inbox"
 import CalendarPage from '@/pages/CalendarPage'
-import FileManager from '@/pages/FileManager'
+import FileManager from '@/pages/apps/file-manager/FileManager'
 
 import Login from '@/pages/authentication/Login'
 import Register from '@/pages/authentication/Register'
@@ -22,10 +22,17 @@ import Account from '@/pages/settings/Account'
 import Appearance from '@/pages/settings/Appearance'
 import Notification from '@/pages/settings/Notification'
 
-import Table from '@/pages/ui-components/Table'
+
 
 import Kanban from './pages/Kanban'
-import Notes from './pages/Notes'
+import Notes from './pages/apps/notes/Notes'
+import NotesDetails from './pages/apps/notes/NotesDetails'
+import FolderDetails from './pages/apps/file-manager/FolderDetails'
+
+
+import ColumnPricing from './pages/pricing/column-pricing'
+import TablePricing from './pages/pricing/table-pricing'
+import SinglePricing from './pages/pricing/single-pricing'
 
 const App = () => {
   return (
@@ -38,7 +45,16 @@ const App = () => {
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/kanban" element={<Kanban />} />
           <Route path="/file-manager" element={<FileManager />} />
+          <Route path="/file-manager/folder/:folderId" element={<FolderDetails />} />
           <Route path="/notes" element={<Notes />} />
+          <Route path="/notes/:id" element={<NotesDetails />} />
+
+
+
+          {/* Pricing Pages */}
+          <Route path="/pages/pricing/column" element={<ColumnPricing />} />
+          <Route path="/pages/pricing/table" element={< TablePricing/>} />
+          <Route path="/pages/pricing/single" element={< SinglePricing/>} />
 
           {/* Authentication Pages */}
           <Route path="/pages/authentication/login" element={<Login />} />
@@ -66,29 +82,6 @@ const App = () => {
           <Route path="/contact" element={<UnderConstructionPage />} />
 
 
-          <Route path="/pages/components/accordion" element={<UnderConstructionPage />} />
-          <Route path="/pages/components/badges" element={<UnderConstructionPage />} />
-          <Route path="/pages/components/breadcrumbs" element={<UnderConstructionPage />} />
-          <Route path="/pages/components/buttons" element={<UnderConstructionPage />} />
-          <Route path="/pages/components/cards" element={<UnderConstructionPage />} />
-          <Route path="/pages/components/carousel" element={<UnderConstructionPage />} />
-          <Route path="/pages/components/list-group" element={<UnderConstructionPage />} />
-          <Route path="/pages/components/modal" element={<UnderConstructionPage />} />
-          <Route path="/pages/components/tabs" element={<UnderConstructionPage />} />
-          <Route path="/pages/components/pagination" element={<UnderConstructionPage />} />
-          <Route path="/pages/components/progress" element={<UnderConstructionPage />} />
-          <Route path="/pages/components/spinners" element={<UnderConstructionPage />} />
-          <Route path="/pages/components/tooltips" element={<UnderConstructionPage />} />
-
-          <Route path="/pages/components/tables" element={<Table />} />
-
-          <Route path="/pages/charts/chartjs" element={<UnderConstructionPage />} />
-          <Route path="/pages/charts/recharts" element={<UnderConstructionPage />} />
-          <Route path="/pages/charts/apexcharts" element={<UnderConstructionPage />} />
-          <Route path="/pages/charts/echarts" element={<UnderConstructionPage />} />
-
-          <Route path="/pages/icons/lucide" element={<UnderConstructionPage />} />
-          <Route path="/pages/icons/bootstrap" element={<UnderConstructionPage />} />
 
 
         </Routes>
