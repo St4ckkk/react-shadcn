@@ -1,10 +1,11 @@
 import MainLayout from "@/components/layout/main-layout";
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Upload, FileText, Image, Video, File, Star, Calendar, MoreHorizontal, ChevronRight, EllipsisVertical, Download, Share, Trash } from "lucide-react";
+import { Upload, FileText, Image, Video, File, Calendar, MoreHorizontal, ChevronRight, EllipsisVertical, Download, Share, Trash } from "lucide-react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from "recharts";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
@@ -48,7 +49,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
 
 
 export default function FileManager() {
-
+    const navigate = useNavigate();
     const [dateRange, setDateRange] = useState<DateRange | undefined>({
         from: new Date(2025, 7, 16),
         to: new Date(2025, 8, 12),
@@ -161,9 +162,9 @@ export default function FileManager() {
     };
     // Folders data
     const foldersData = [
-        { name: "Documents", items: 120, lastUpdate: "10 days ago", starred: true, icon: <FileText className="h-4 w-4 text-orange-500" /> },
-        { name: "Images", items: 250, lastUpdate: "2 days ago", starred: false, icon: <Image className="h-4 w-4 text-blue-500" /> },
-        { name: "Downloads", items: 80, lastUpdate: "Yesterday", starred: false, icon: <File className="h-4 w-4 text-blue-500" /> },
+        { id: "design", name: "Design", items: 120, lastUpdate: "10 days ago", starred: true, icon: <FileText className="h-4 w-4 text-orange-500" /> },
+        { id: "documents", name: "Documents", items: 250, lastUpdate: "2 days ago", starred: false, icon: <Image className="h-4 w-4 text-blue-500" /> },
+        { id: "downloads", name: "Downloads", items: 80, lastUpdate: "Yesterday", starred: false, icon: <File className="h-4 w-4 text-blue-500" /> },
     ];
 
     // Files data
@@ -312,16 +313,16 @@ export default function FileManager() {
             {/* Folders and storage space */}
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
                 {foldersData.map((folder, index) => (
-                    <Card key={index} className="border border-gray-200 rounded-sm">
-                        <CardContent className="">
-                            <div className="flex items-center justify-between text-sm">
+                    <Card key={index} className="border border-gray-200 rounded-sm cursor-pointer hover:shadow-sm transition-shadow">
+                        <CardContent className="p-4">
+                            <div className="flex items-center justify-between text-sm mb-3">
                                 <div className="flex items-center">
                                     {folder.icon}
                                     <span className="ml-2 font-medium text-gray-700">{folder.name}</span>
                                 </div>
                                 <Popover>
                                     <PopoverTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
+                                        <Button variant="ghost" size="icon" className="h-8 w-8 p-0" onClick={(e) => e.stopPropagation()}>
                                             <EllipsisVertical className="h-4 w-4" />
                                         </Button>
                                     </PopoverTrigger>
@@ -330,7 +331,7 @@ export default function FileManager() {
                                             <Button
                                                 variant="ghost"
                                                 className="flex items-center justify-start text-xs font-normal border-none rounded-none hover:bg-gray-50 h-7"
-                                                onClick={() => console.log(`Downloading file`)}
+                                                onClick={() => console.log(`Downloading folder`)}
                                             >
                                                 <Download className="h-2 w-2" />
                                                 Download
@@ -338,16 +339,15 @@ export default function FileManager() {
                                             <Button
                                                 variant="ghost"
                                                 className="flex items-center justify-start  text-xs font-normal border-none rounded-none hover:bg-gray-50 h-7"
-                                                onClick={() => console.log(`Sharing file`)}
+                                                onClick={() => console.log(`Sharing folder`)}
                                             >
                                                 <Share className="h-2 w-2" />
                                                 Share
                                             </Button>
-
                                             <Button
                                                 variant="ghost"
                                                 className="flex items-center border-t justify-start px-2 py-1 text-xs font-normal text-red-500 rounded-none hover:bg-gray-50 h-7"
-                                                onClick={() => console.log(`Deleting file`)}
+                                                onClick={() => console.log(`Deleting folder`)}
                                             >
                                                 <Trash className="h-2 w-2" />
                                                 Delete
@@ -355,15 +355,24 @@ export default function FileManager() {
                                         </div>
                                     </PopoverContent>
                                 </Popover>
-
                             </div>
-                            <div className="mt-6 px-2 py-1 bg-gray-50 text-xs rounded border border-gray-200">
-                                {folder.items} items
+                            
+                            <div className="text-xs text-gray-500 mb-3">
+                                {folder.items} files • {folder.lastUpdate}
                             </div>
-                            <div className="mt-1 flex items-center justify-between text-[9px] text-gray-500">
-                                <div>Last update: {folder.lastUpdate}</div>
-                                {folder.starred && <Star className="h-3 w-3 text-amber-400 fill-amber-400" />}
-                            </div>
+                            
+                            <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="w-full text-xs"
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    navigate(`/file-manager/folder/${folder.id}`)
+                                }}
+                            >
+                                View More
+                                <ChevronRight className="h-3 w-3 ml-1" />
+                            </Button>
                         </CardContent>
                     </Card>
                 ))}

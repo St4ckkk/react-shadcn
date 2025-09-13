@@ -1,12 +1,10 @@
 import { Link, useLocation } from "react-router-dom"
 import { useState } from "react"
 import { 
-  Palette,
-  BarChart3,
-  Sparkles,
   AlertTriangle,
   User,
-  Settings
+  Settings,
+  BadgeDollarSign
 } from "lucide-react"
 
 import {
@@ -31,12 +29,11 @@ import { ChevronRight } from "lucide-react"
 import { 
   mainItems, 
   pageItems, 
-  componentItems, 
-  chartsComponents, 
+  appItems,
   errorComponents, 
   settingsComponents, 
-  authenticationComponents, 
-  iconComponents 
+  authenticationComponents,  
+  pricingComponents,
 } from "@/data/navigation-data"
 
 function CollapsibleSection({ 
@@ -44,7 +41,7 @@ function CollapsibleSection({
   isOpen, 
   setIsOpen
 }: { 
-  section: { id: string; title: string; items: typeof componentItems; icon: any }
+  section: { id: string; title: string; items: typeof mainItems; icon: any }
   isOpen: boolean
   setIsOpen: (open: boolean) => void
 }) {
@@ -55,81 +52,54 @@ function CollapsibleSection({
   }
 
   return (
-    <SidebarGroup className="-my-2">
-      <SidebarGroupContent className="px-1">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton 
-              onClick={() => setIsOpen(!isOpen)}
-              className="cursor-pointer w-full justify-between"
-            >
-              <div className="flex items-center gap-2">
-                <section.icon className="h-4 w-4" />
-                <span>{section.title}</span>
-              </div>
-              <ChevronRight 
-                className={`h-4 w-4 transition-transform duration-200 ${
-                  isOpen ? 'rotate-90' : ''
-                }`} 
-              />
-            </SidebarMenuButton>
-            {isOpen && (
-              <SidebarMenuSub>
-                {section.items.map((item) => (
-                  <SidebarMenuSubItem key={item.title}>
-                    <SidebarMenuSubButton 
-                      asChild
-                      isActive={location.pathname === item.url}
-                    >
-                      <Link to={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                ))}
-              </SidebarMenuSub>
-            )}
-          </SidebarMenuItem>    
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </SidebarGroup>
+    <SidebarMenuItem>
+      <SidebarMenuButton 
+        onClick={() => setIsOpen(!isOpen)}
+        className="cursor-pointer w-full justify-between"
+      >
+        <div className="flex items-center gap-2">
+          <section.icon className="h-4 w-4" />
+          <span>{section.title}</span>
+        </div>
+        <ChevronRight 
+          className={`h-4 w-4 transition-transform duration-200 ${
+            isOpen ? 'rotate-90' : ''
+          }`} 
+        />
+      </SidebarMenuButton>
+      {isOpen && (
+        <SidebarMenuSub>
+          {section.items.map((item) => (
+            <SidebarMenuSubItem key={item.title}>
+              <SidebarMenuSubButton 
+                asChild
+                isActive={location.pathname === item.url}
+              >
+                <Link to={item.url}>
+                  <item.icon />
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuSubButton>
+            </SidebarMenuSubItem>
+          ))}
+        </SidebarMenuSub>
+      )}
+    </SidebarMenuItem>
   )
 }
 
 export function AppSidebar() {
   const location = useLocation()
-  const [isComponentsOpen, setIsComponentsOpen] = useState(false)
-  const [isTablesOpen, setIsTablesOpen] = useState(false)
-  const [isChartsOpen, setIsChartsOpen] = useState(false)
-  const [isIconsOpen, setIsIconsOpen] = useState(false)
   const [isErrorOpen, setIsErrorOpen] = useState(false)
   const [isAuthenticationOpen, setIsAuthenticationOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [isPricingOpen, setIsPricingOpen] = useState(false)
   const isLoading = useLoadingState(200)
   
   const collapsibleSections = [
     {
-      id: 'components',
-      title: 'UI Components',
-      items: componentItems,
-      icon: Palette,
-    },
-    {
-      id: 'charts',
-      title: 'Charts', 
-      items: chartsComponents,
-      icon: BarChart3,
-    },
-    {
-      id: 'icons',
-      title: 'Icons', 
-      items: iconComponents,
-      icon: Sparkles,
-    },
-    {
       id: 'error',
-      title: 'Error', 
+      title: 'Error Pages', 
       items: errorComponents,
       icon: AlertTriangle,
     },
@@ -144,7 +114,14 @@ export function AppSidebar() {
       title: 'Settings', 
       items: settingsComponents,
       icon: Settings,
-    }
+    },
+    {
+      id: 'Pricing',
+      title: 'Pricing',
+      items: pricingComponents,
+      icon: BadgeDollarSign,
+    },
+    
   ]
 
   if (isLoading) {
@@ -194,17 +171,33 @@ export function AppSidebar() {
             ))}
 
             <SidebarGroup className="py-1">
-              <SidebarGroupLabel className="px-2 py-1">Pages</SidebarGroupLabel>
+              <SidebarGroupLabel className="px-2 py-1">Apps</SidebarGroupLabel>
               <SidebarGroupContent className="px-1">
                 <SidebarMenu>
-                  {Array.from({ length: 3 }).map((_, i) => (
+                  {Array.from({ length: 4 }).map((_, i) => (
                     <SidebarMenuItem key={i}>
                       <SidebarMenuButton>
                         <Skeleton className="h-4 w-4 rounded" />
-                        <Skeleton className="h-4 w-16" />
+                        <Skeleton className="h-4 w-24" />
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+
+            <SidebarGroup className="py-1">
+              <SidebarGroupLabel className="px-2 py-1">Pages</SidebarGroupLabel>
+              <SidebarGroupContent className="px-1">
+                <SidebarMenu>
+                      {Array.from({ length: 3 }).map((_, i) => (
+                        <SidebarMenuItem key={i}>
+                          <SidebarMenuButton>
+                            <Skeleton className="h-4 w-4 rounded" />
+                            <Skeleton className="h-4 w-16" />
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      ))}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
@@ -258,19 +251,31 @@ export function AppSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
 
-          {collapsibleSections.map((section, index) => {
-            const stateMap = [isComponentsOpen, isTablesOpen, isChartsOpen, isIconsOpen, isErrorOpen, isAuthenticationOpen, isSettingsOpen]
-            const setStateMap = [setIsComponentsOpen, setIsTablesOpen, setIsChartsOpen, setIsIconsOpen, setIsErrorOpen, setIsAuthenticationOpen, setIsSettingsOpen]
-  
-            return (
-              <CollapsibleSection 
-                key={section.id}
-                section={section} 
-                isOpen={stateMap[index]} 
-                setIsOpen={setStateMap[index]}
-              />
-            )
-          })}
+          <SidebarGroup className="py-1">
+            <SidebarGroupLabel className="px-2 py-1">Apps</SidebarGroupLabel>
+            <SidebarGroupContent className="px-1">
+              <SidebarMenu>
+                {appItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton 
+                      asChild
+                      isActive={location.pathname === item.url}
+                    >
+                      <Link to={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                        {item.badge && item.badge > 0 && (
+                          <UIBadge className="ml-auto bg-red-500 text-white text-xs h-5 w-5 rounded-full flex items-center justify-center p-0">
+                            {item.badge}
+                          </UIBadge>
+                        )}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
 
           <SidebarGroup className="py-1">
             <SidebarGroupLabel className="px-2 py-1">Pages</SidebarGroupLabel>
@@ -289,6 +294,20 @@ export function AppSidebar() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
+                
+                {collapsibleSections.map((section, index) => {
+                  const stateMap = [ isErrorOpen, isAuthenticationOpen, isSettingsOpen, isPricingOpen]
+                  const setStateMap = [ setIsErrorOpen, setIsAuthenticationOpen, setIsSettingsOpen, setIsPricingOpen]
+        
+                  return (
+                    <CollapsibleSection 
+                      key={section.id}
+                      section={section} 
+                      isOpen={stateMap[index]} 
+                      setIsOpen={setStateMap[index]}
+                    />
+                  )
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>

@@ -2,29 +2,9 @@ import {
   Home,
   Inbox,
   Calendar,
-  Layers,
-  Badge,
-  Navigation,
-  MousePointer,
-  CreditCard,
   ImageIcon,
-  List,
-  Square,
-  Layout,
-  FileText,
-  CircleDot,
-  Loader2,
-  HelpCircle,
-  Table,
-  ChartBar,
-  ChartArea,
-  ChartBarBig,
-  ChartPie,
   FolderClosed,
   Kanban,
-  //   Palette,
-  //   Database,
-  BarChart3,
   StickyNote,
   //   Sparkles,
   //   AlertTriangle,
@@ -44,7 +24,10 @@ export const mainItems: NavigationItem[] = [
     title: "Home",
     url: "/",
     icon: Home,
-  },
+  }
+]
+
+export const appItems: NavigationItem[] = [
   {
     title: "Inbox",
     url: "/inbox",
@@ -73,130 +56,44 @@ export const mainItems: NavigationItem[] = [
   }
 ]
 
+
 export const pageItems: NavigationItem[] = [
+  // {
+  //   title: "Users List",
+  //   url: "/users-list",
+  //   icon: ImageIcon,
+  // },
+]
+
+export const emptyStatesComponents: NavigationItem[] = [
   {
-    title: "Blank",
-    url: "/blank",
-    icon: ImageIcon,
-  },
-  {
-    title: "Pricing",
-    url: "/pricing",
-    icon: ImageIcon,
-  },
-  {
-    title: "Contact",
-    url: "/contact",
-    icon: ImageIcon,
-  },
-  {
-    title: "Profile",
-    url: "/profile",
+    title: "Empty States",
+    url: "/pages/empty-states",
     icon: ImageIcon
   }
 ]
 
-export const componentItems: NavigationItem[] = [
+export const pricingComponents: NavigationItem[] = [
   {
-    title: "Accordion",
-    url: "/pages/components/accordion",
-    icon: Layers,
+    title: "Column Pricing",
+    url: "/pages/pricing/column",
+    icon: ImageIcon
   },
   {
-    title: "Badges",
-    url: "/pages/components/badges",
-    icon: Badge,
+    title: "Table Pricing",
+    url: "/pages/pricing/table",
+    icon: ImageIcon
   },
   {
-    title: "Tables",
-    url: "/pages/components/tables",
-    icon: Table,
-  },
-  {
-    title: "Charts",
-    url: "/pages/components/charts",
-    icon: ChartBar,
-  },
-  {
-    title: "Breadcrumbs",
-    url: "/pages/components/breadcrumbs",
-    icon: Navigation,
-  },
-  {
-    title: "Buttons",
-    url: "/pages/components/buttons",
-    icon: MousePointer,
-  },
-  {
-    title: "Cards",
-    url: "/pages/components/cards",
-    icon: CreditCard,
-  },
-  {
-    title: "Carousel",
-    url: "/pages/components/carousel",
-    icon: ImageIcon,
-  },
-  {
-    title: "List group",
-    url: "/pages/components/list-group",
-    icon: List,
-  },
-  {
-    title: "Modal",
-    url: "/pages/components/modal",
-    icon: Square,
-  },
-  {
-    title: "Tabs",
-    url: "/pages/components/tabs",
-    icon: Layout,
-  },
-  {
-    title: "Pagination",
-    url: "/pages/components/pagination",
-    icon: FileText,
-  },
-  {
-    title: "Progress",
-    url: "/pages/components/progress",
-    icon: CircleDot,
-  },
-  {
-    title: "Spinners",
-    url: "/pages/components/spinners",
-    icon: Loader2,
-  },
-  {
-    title: "Tooltips",
-    url: "/pages/components/tooltips",
-    icon: HelpCircle,
-  },
-]
-
-
-export const chartsComponents: NavigationItem[] = [
-  {
-    title: "Chart.js",
-    url: "/pages/charts/chartjs",
-    icon: ChartBar
-  },
-  {
-    title: "Recharts",
-    url: "/pages/charts/recharts",
-    icon: ChartArea
-  },
-  {
-    title: "ApexCharts",
-    url: "/pages/charts/apexcharts",
-    icon: ChartBarBig
-  },
-  {
-    title: "ECharts",
-    url: "/pages/charts/echarts",
-    icon: ChartPie
+    title: "Single Pricing",
+    url: "/pages/pricing/single",
+    icon: ImageIcon
   }
 ]
+
+
+
+
 
 export const errorComponents: NavigationItem[] = [
   {
@@ -262,67 +159,17 @@ export const authenticationComponents: NavigationItem[] = [
   }
 ]
 
-export const iconComponents: NavigationItem[] = [
-  {
-    title: "Lucide",
-    url: "/pages/icons/lucide",
-    icon: ImageIcon
-  },
-  {
-    title: "Bootstrap Icons",
-    url: "/pages/icons/bootstrap",
-    icon: ImageIcon
-  }
-]
 
-// Dashboard items for command palette
-export interface DashboardItem {
-  name: string
-  icon: any
-  description: string
-}
 
-export const dashboards: DashboardItem[] = [
-  {
-    name: "Default",
-    icon: HelpCircle,
-    description: "Default dashboard view"
-  },
-  {
-    name: "E-commerce",
-    icon: CreditCard,
-    description: "E-commerce analytics dashboard"
-  },
-  {
-    name: "Sales",
-    icon: ChartBar,
-    description: "Sales performance dashboard"
-  },
-  {
-    name: "CRM",
-    icon: List,
-    description: "Customer relationship management"
-  },
-  {
-    name: "Website Analytics",
-    icon: BarChart3,
-    description: "Website traffic and analytics"
-  },
-  {
-    name: "Project Management",
-    icon: FolderClosed,
-    description: "Project tracking and management"
-  }
-]
+
+
 
 // All navigation items combined for search
 export const allNavigationItems: NavigationItem[] = [
   ...mainItems,
+  ...appItems,
   ...pageItems,
-  ...componentItems,
-  ...chartsComponents,
   ...errorComponents,
   ...settingsComponents,
   ...authenticationComponents,
-  ...iconComponents
 ]

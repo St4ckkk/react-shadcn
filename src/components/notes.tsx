@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
-import { Plus, Search, Grid, List, FileText, Archive, Tag, Menu, Edit, Image, Trash2, Bold, Italic, UnderlineIcon, MoreHorizontal } from "lucide-react"
+import { Plus, Search, Grid, List, FileText, Archive, Tag, Menu, Edit, Image, Trash2, Bold, Italic, UnderlineIcon, MoreHorizontal, FileX } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -16,8 +17,6 @@ import StarterKit from '@tiptap/starter-kit'
 import BulletList from '@tiptap/extension-bullet-list'
 import OrderedList from '@tiptap/extension-ordered-list'
 import ListItem from '@tiptap/extension-list-item'
-
-
 
 type Note = {
     id: number
@@ -30,6 +29,7 @@ type Note = {
 }
 
 export default function NotesComponent() {
+    const navigate = useNavigate()
     const isMobile = useIsMobile()
     const [viewMode, setViewMode] = useState("grid")
     const [searchTerm, setSearchTerm] = useState("")
@@ -43,7 +43,6 @@ export default function NotesComponent() {
     })
 
     useEffect(() => {
-        // Add custom CSS for list styling - ABSOLUTE approach
         const style = document.createElement('style')
         style.textContent = `
             .ProseMirror ol {
@@ -114,7 +113,6 @@ export default function NotesComponent() {
             },
         },
         onUpdate: ({ editor }) => {
-            // Reset all buttons when editor is empty
             if (editor.getText().trim() === '') {
                 setPressedButtons({
                     bold: false,
@@ -281,6 +279,42 @@ export default function NotesComponent() {
             )
         )
     }
+
+    const filteredNotes = notes.filter(note => {
+        if (!searchTerm.trim()) return true
+        
+        const searchLower = searchTerm.toLowerCase()
+        return (
+            note.title.toLowerCase().includes(searchLower) ||
+            (note.content && note.content.toLowerCase().includes(searchLower)) ||
+            note.labels.some(label => label.toLowerCase().includes(searchLower)) ||
+            (note.items && note.items.some(item => item.text.toLowerCase().includes(searchLower)))
+        )
+    })
+
+    const handleNoteClick = (noteId: number) => {
+        navigate(`/notes/${noteId}`)
+    }
+
+    const NoSearchResults = () => (
+        <div className="flex flex-col items-center justify-center py-12 px-4">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <FileX className="w-8 h-8 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">No notes found</h3>
+            <p className="text-sm text-gray-500 text-center mb-4">
+                We couldn't find any notes matching "{searchTerm}".
+            </p>
+            <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setSearchTerm("")}
+                className="text-gray-600 border-gray-300 hover:bg-gray-50"
+            >
+                Clear search
+            </Button>
+        </div>
+    )
 
     const handleFormat = (format: string) => {
         if (!editor) return
@@ -536,7 +570,7 @@ export default function NotesComponent() {
                         
                         <div className="flex items-center space-x-2">
                             {!isMobile && (
-                                <div className="flex items-center space-x-1">
+                                <div className="flex items-center">
                             <Button
                                 variant={viewMode === "grid" ? "default" : "ghost"}
                                 size="sm"
@@ -681,9 +715,16 @@ export default function NotesComponent() {
                 </div>
 
                 <ScrollArea className="flex">
-                    <div className={isMobile ? "space-y-4" : viewMode === "grid" ? "columns-1 md:columns-2 lg:columns-4 gap-2 space-y-2" : "space-y-4"}>
-                        {notes.map((note) => (
-                            <Card key={note.id} className={`cursor-pointer border border-gray-200 rounded-xs hover:shadow-sm transition-shadow break-inside-avoid mb-4 ${isMobile ? "w-full" : viewMode === "grid" ? "w-57" : "w-full"}`}>
+                    {filteredNotes.length === 0 && searchTerm.trim() ? (
+                        <NoSearchResults />
+                    ) : (
+                        <div className={isMobile ? "space-y-4" : viewMode === "grid" ? "columns-1 md:columns-2 lg:columns-4 gap-2 space-y-2" : "space-y-4"}>
+                            {filteredNotes.map((note) => (
+                            <Card 
+                                key={note.id} 
+                                className={`cursor-pointer border border-gray-200 rounded-xs hover:shadow-sm transition-shadow break-inside-avoid mb-4 ${isMobile ? "w-full" : viewMode === "grid" ? "w-57" : "w-full"}`}
+                                onClick={() => handleNoteClick(note.id)}
+                            >
                                 {viewMode === "grid" ? (
                                     <>
                                 {note.image && (
@@ -705,7 +746,8 @@ export default function NotesComponent() {
                                                     <Checkbox
                                                         checked={item.checked}
                                                         onCheckedChange={() => toggleChecklistItem(note.id, index)}
-                                                                className="h-4 w-4"
+                                                        className="h-4 w-4"
+                                                        onClick={(e) => e.stopPropagation()}
                                                     />
                                                     <span className={`text-sm ${item.checked ? "line-through text-gray-500" : "text-gray-700"}`}>
                                                         {item.text}
@@ -751,6 +793,7 @@ export default function NotesComponent() {
                                                                 checked={item.checked}
                                                                 onCheckedChange={() => toggleChecklistItem(note.id, index)}
                                                                 className="h-4 w-4"
+                                                                onClick={(e) => e.stopPropagation()}
                                                             />
                                                             <span className={`text-sm ${item.checked ? "line-through text-gray-500" : "text-gray-700"}`}>
                                                                 {item.text}
@@ -776,8 +819,9 @@ export default function NotesComponent() {
                                     </div>
                                 )}
                             </Card>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    )}
                 </ScrollArea>
             </div>
         </div>

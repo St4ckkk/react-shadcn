@@ -15,8 +15,8 @@ export default function SettingsRightPanel() {
 
   return (
     <div className="w-60 mt-6">
-      <Card>
-        <CardContent className="">
+      <Card className="rounded-sm border border-gray-200 ">
+        <CardContent className="px-4 py-4">
           <nav className="">
             {settingsSections.map((section) => {
               const isActive = location.pathname === section.path
